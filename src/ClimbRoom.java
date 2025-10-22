@@ -1,5 +1,3 @@
-package com.lostrelic;
-
 public class ClimbRoom extends Room {
     private final boolean requiresShoes;
     private final boolean requiresHook;

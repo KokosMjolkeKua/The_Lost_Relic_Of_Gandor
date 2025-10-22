@@ -1,5 +1,3 @@
-package com.lostrelic;
-
 public class Riddle {
     private final String question;
     private final String answer;

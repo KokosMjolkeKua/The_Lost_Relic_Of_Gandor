@@ -1,5 +1,3 @@
-package com.lostrelic;
-
 public class DragonRoom extends GenericRoom {
     private Enemy dragon;
 

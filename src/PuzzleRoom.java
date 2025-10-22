@@ -1,5 +1,3 @@
-package com.lostrelic;
-
 public class PuzzleRoom extends GenericRoom {
     private final Riddle riddle;
 

@@ -1,5 +1,3 @@
-package com.lostrelic;
-
 public class Enemy {
     private final String name;
     private int health;
