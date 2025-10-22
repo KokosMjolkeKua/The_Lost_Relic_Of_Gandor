@@ -1,0 +1,346 @@
+LAYOUT_MAP_WORLD
+
+room 1:
+Start of describing the area around you. coming from a clearing where you cannot go back.
+you can only go north. (in your inventory, you have shoes that can be equipped)
+
+room 2:
+you go north. the forest is here, describe the surrounding, a bit gritty, mossy but still a bit of sun coming.
+there is a path north and a past west.
+
+room 3:
+go north, the path to the north leads to a cliff, that looks climbable. it is sunny, but a bit muddy.
+you can chose to climb. (if you climb and have no shoes on, you will fall and die)
+
+room 4: (items: rusty dagger, leather armour thin, gauntlets of fur)
+climb, if you have shoes and climb you get to a tiny campsite where you find leather armour,
+gauntlets of fur, and a little rusty dagger. there is a description of having a clearing, and seeing a castle in the distance.
+there are no roads so you have to go back where you came from. luckily  there is a rope attached to the top so you can make it safely down.
+
+room 5:
+go west.
+you have to go back to room 2, this is the room if you go west. there is vegetation,
+you hear a little rustle in the wind but see nothing.
+there is a path west.
+
+room 6: (door; you need rusty key)
+go west: you close in on a clearing and you see a big metal and wood door with a rusty keyhole inside of the mountain that leads north.
+there is also a path to the west. if you try to open the door without key it will tell you the door does not budge. if you try attacking
+the door, you will break if you are using the rusty dagger.
+
+room 7: (item sapphire)(mural)
+go west. there is a stone wall with a mural telling the story of a great battle fought. you see something small glimmering in it.
+if you use the rusty dagger to pick at it a small square sapphire will fall out. if you dont have the rusty dagger, it will not let you take it.
+there is a road to the north and to the west:
+
+room 8:(item rusty key)
+go west. there is a little clearing with a rusty key laying in a pile of burnt clothing.
+
+room 9:(item apple)
+go north. there is only a lot of brush and some barbed wire. there is also an apple to pick up.
+
+room 10: (need, climbing shoes or grappling hook, or both)
+you have to go back to room 6, and use the rusty key to open the door. the door unlock and you have to press open, to be able to enter
+to the next area. this is a long corridor.
+at the end of the corridor there is a path to the north. and to the east there is a section that is possible to climb. (if you want to
+climb, you need to have climbing shoes, or  a grappling hook.) (if you try to climb it will tell you it is maybe to steep, ask if you are sure,
+if you say yes, you will climb and fall to your death)
+
+room 11:
+go north. there is a goblin here. you hide in a bush and decide what to do. if you attack the goblin with you bare hands, the game asks:
+are you sure? and you will win no matter what weapon. if you fight with no weapon the curator will congratulate you becasue he had no faith
+in you. there is a path to the west, there is a path to the north. and there is a path to the west(but the path to the west is blocked and you
+are not able to access it.
+
+room 12:
+go north, there is a clearing and butterflies fly around the area, there is a path to the north
+
+room 13:(need a needle to continue)
+go north, there is a rock wall up ahead, there is an inscription on the door. "what has an eye but cannot see?", the answer is a needle,
+and you need to have the item needle to be able to enter.
+
+room 14:
+this is the room if you are able to climb fro m room 10. there is a path to the west that leads to room 11, which you can now see is possible
+to access but only from this side of the road. there is also a path north.
+
+room 15:(item needle, red ruby)
+go north. there is a goblin here. you have to attack the goblin. with anything. if you wait for 30 seconds the goblin will attack you and you
+will die before you can do anything. the goblin drops a needle, and a red ruby. there is only a path back to where you came from after this room.
+
+room 16:
+go east after room 11. this is just dense forest, there is a path south, east and north. it starts to rain her, just a little bit.
+
+room 17:(mural)
+go south. there is a clearing. and a mural in the flowers that gives you the chills. it looks scary.
+
+room 18:
+go north after 16. there is a slime here. the slime sees you and is crawling towards you. it does no damage. you can choose to run away.
+or attack. if you attack the slime, he will run away.
+
+room 19:
+go east after room 16. there is more dense forest. a path to the south and a path to the east.
+
+room 20:
+go south. there is a little camp fire that has long since been dead. there is a skeleton laying next to the fire. there is a small sack.
+if you open the sack yo u will find climbing shoes.
+
+room 21:
+go east after room 19. there is a goblin, he spots you and runs to the east. there is a path to the east and a path to the north
+
+room 22:
+go north. this is a long path with murky waters and svamp like sides. the path continues north.
+
+room 23:(item arrow x5 and a broken bow)
+go north. there is a goblin you need to defeat. have to attack him with the rusy dagger because he is a little stronger. he drops some
+arrows but the bow is broken. there is a path to the east.
+
+room 24:
+go east. there is a path to the east and to the south. still very svampy.
+
+room 25:(item, glowing red orb, a bone key and 2 rubies)
+go east. there is a small chest hidden in som brush, there is a red glowing orb inside, a bone key and 2 rubies.
+
+room 26: (item: option 1:(black robe, 2 healing potions, a sapphire, a shield)
+            (option 2:(black robe, 2 healing potions, a sapphire, a shield)
+            (option 3: you get: black robe, 2 healing potions: can trade for shield, sword, and ask to fix bow)
+go south from room 24. in the middle of the svamp you see a small little hut. erie music is playing and you hear some cackling indide
+the hut. if you choose to look you can look inside the window and you see an old lady brewing something in a big pot. it looks a bit scary.
+you have several options:
+    1. you barge in and attack her, you can defeat her if you have the climbing boots, rusty dagger, leather armour, fur gloves equipped.
+    (if you miss one you die and she makes you into soup)
+    when she dies, you can take her robe, which is black, and she has 2 healing potions on her, a sapphire and a shield.
+    2. you knock on the door, you greet her and she says to come in. she wants to give you something to drink. you can say yes or no. if
+    you say yes she hands you poison and you drink and die. if you say no she will attack you and if you have:
+    climbing boots, rusty dagger, leather armour, fur gloves equipped. (if you miss one you die and she makes you into soup)
+    3. you knock on the door, she greets and says to come in. you give the apple that you have found. if you have found it. the old
+    lady gets very happy and thankful becasue no one is ever nice to her. she asks you to do something for her, she needs a rusty dagger.
+    you need to find a rusty dagger to give to her. in exchange she gives you her black robe which makes you less visibe, and she gives you
+    2 healing potions as thanks. now that you have a good relation with her you can also trade with her. you can by a shield for 1 ruby,
+    a nice sword for 3 rubies (10 ruby is 1 sapphire), she also has healing potions. and you can ask her to fix your broken bow for 5 rubies.
+    (can be visited again, if you bring her a fruit again she will give you more healing potions)
+
+room 27:
+go east after room 21. this is a clearing. to the south you see a big area. that is a goblin camp and you see the goblin from earlier sprinting
+towards the gate. the is only a path south.
+
+room 28: (GOBLIN CAMP)(item: 5 rubies, stone key, fire proof, underpants, a map of the world , grappling hook.)
+go south. introduce the camp as small but humble. there are 3 goblin at the entrance. you can attack with a sword, but then you will die. the only way
+to defeat them is to shoot them from long distance with the arrow. once you have, you can go to the gate and open it. there is the goblin lord and his
+two goblins, you can shoot them with arrows or attack with sword. you can only win if you have the sword. then it is the goblin lord.
+you can only win against him if you have the shield and the sword together. (between the first three goblins, two goblins and goblin lord you have the
+choice to run away.) but if you do. the same amount of goblins will be there when you come back.
+if you defeat the goblin lord. he will fall and the rest of the goblins in camp will bow to you. (you will get 5 rubies. stone key.
+fire proof underpants, a map of the world(when you get this map it will start recording your moves, and register it on the map so you can see)
+
+room 29: (use item: bone key and Sapphire)
+go north after room 13 if you are able to open the door. You will be met with two goblin standing on eather side of an even bigger door to the north
+of the room. this time it is massive. the golems greet you, explaining that they are golem Thord and Golem Nord, and that you need to pass a riddle and
+you need to retrieve and item before you can pass. you can try to fight them. but they just look at you weird and are wondering what you are
+doing. you do not budge them.
+They as you this riddle. one of us always tells the truth, the other only tells lies. which of us is which? if you are able to solve it that is step one
+you can solve it at any time. the item they ask you to get is a bone key and a sapphire. if you are able to provide items and solve the riddle they let
+you pass. to solve it you need to ask one of them in what direction their door is in from your perspective. It should be golem nord that is the one who lies
+. if you answer nord if the lier, it is correct.
+
+room 30:
+go east of room 29: this is a clearing with a road to the south.
+
+room 31: (to climb you need any kind of boots equipped, if not equipped it will say you are slipping and sen dyou back to room 30)
+go south of room 30. this is a steep steep hill and you are able to get to the top of it. suddenly you see a lot. up here on this cliff is the perfect vantage point.
+you can see the huge castle in the west. you are close now. it is just west of room 29. it looks menacing. you have a bad feeling about it. to the north-west you see
+that there is a secret path between room 32 and room 37. it looks like its easy to get too when you see it from here.
+
+room 32:
+go north after room 29. this is dense forest. there is a path to the north. if, and only if you have been in room 31. you will be able to spot a secret path to the east.
+if you havent been to room 31 this path will not appear. if you go to room 31 later in the game, then the secret path will appear.
+
+room 33:
+go north after room 32. there is a path to the east and a path to the west.
+
+room 34:
+go west after room 33. there is a path to the south.
+
+room 35:(jigsaw puzzle: reward mural to beat the dragon)
+go south after room 34. there is a clearing and a stone formation in front of. something that looks like a jigsaw puzzle, and there is one piece missing. if you are able to
+find the missing piece. the rock formation will shift and move. revealing a  mural that shows a small man in nothing but underwear, and a helmet, offering a red glowing orb
+to a ginormous and monstrous dragon (he is kneeling). (this is a hint to how you can win against the dragon without having to fight)
+
+room 36:
+go east after room 33. there is a path to the north.
+
+room 37:
+go east after room 32. this is the secret path that you take a while to get through, you come to a small clearing where you hear some rustling to the south. you see the cliff
+of  room 31 in the distance. there is a path to the east, a path to the north and a path to the south where you heard the rustling.
+
+room 38: (if you wait 30 seconds the goblin will kill the villagers)
+go south after room 37. there stands a goblin here with its back turned holding some people prisinor. you have to attack him to stop him from killing the people. when you kill
+him. the people/villagers will thank you profoundly and be on their way.
+
+room 39: (item apple)
+go east after room 37. the path stops. but you see a small glimmering for the rock formation. if you inspect you will be able to find a small chest with an apple.
+
+room 40: (item helmet steel)
+go north after room 37. there is a cliff, and on the edge of the cliff, a skeleton that looks like a night in shining armour. the only piece of armour that is not super rusty,
+is a steel helmet.
+
+room 41:(optional yo can use the black robe to sneak)
+go north after room 36. there is a goblin here. if you have the black robe you can sneak past him and avoid contact. there is a path to the
+north.
+
+room 42:
+go north. there is a clearing. there is a path to the east and there is a path to the west.
+
+room 43:(use: black robe  item: ruby)
+go east after room 42. there is a goblin here. you can fight him, he will drop a ruby if you attack. if you use a black robe, you can sneak past him. there
+is a path to the north.
+
+room 44: (riddle, reward: missing jigsaw puzzle from room 35)
+go north from room 43. there is a small chest her. it has an inscription on the chest. a riddle. "I am born in fear, raised in truth, and i come to my own in deed.
+When comes a time that i am called forth, i come to serve the cause of need." the correct answer is courage. if answered correctly the chest will open and a small jigsaw
+puzzle will be inside.
+
+room 45: (equipped: climbing boots AND grappling hook: if you are missing one, you can only go halfway before you have to climb down again.)
+go west after room 42. there is a climbing possibility to the south and a path to the north. (you can only climb up the path to the south if you are wearing climbing shoes
+and are equipping the grappling hook.
+
+room 46:
+climb to the south from room 45. you are on the top of the hill and discover that you cannot go back the way you came. there is a path to the north and a path to
+the west.
+
+room 47: (item: platinum sword)
+go west after room 46. there is a small rock with a platinum sword stuck to it.
+(the requirements for being able to remove it: you must have defeated 8 goblins, and the goblin lord  OR you have defeated the Dragon in Combat)
+if you dont meet the requirements the sword will not budge. if you are close then it will say it is moving a little.
+
+room 48:(item: steel gauntlets)
+go north after room 46. there is a lot of brush, but you see a road to the east, that is possible to squeese through. there is a small crevice between two rocks and you
+find steel gauntlets
+
+room 49:
+go north from room 45 OR come from room 48 through the crevice (this is only a one way from 48 -> 49.) there is a path leading north. if you are not coming from room 48
+you are not able to see the crevice road.
+
+room 50:
+go north from room 49. there is a path north and there is a path east.
+
+room 51: (item: climbing shoes)
+go east after room 50. there is a beautiful flower garden, so many colours, and its really peaceful. you can choose to sit down and relax a bit if you want. if you
+sit for 60 seconds. you will spot something in the flowers. it is climbing boots. (requirements, you need to sit in the flower field for 60 seconds)
+
+room 52:
+go north after room 50. there is a path to the west, a path to the north , and a path to the east. the path to the west leads to something that looks like a canyon,
+in the distance you see no vegetation. just a barren wasteland.
+
+room 53:
+go north after room 52. there is a goblin. he looks a bit scared. you have 2 options.
+    1. if you try and speak with him. he will explain that he doesnt want to fight, he has actually been looking for you and want to join you on your adventur.
+    you can choose to accept and you will now have a follower that can be useful in combat. (his name is gretchen).
+    if you choose not to make him a follower: you can either kill him. (and you will get scolded by the curator) OR you can say goodbye to him and he will leave you.
+    2. you fight him imidiately and you will defeat him and get a ruby.
+
+room 54: (mural)(use: ruby)
+go east after room 52. there is a mural here. there is space for a ruby in the middle. if you use a ruby in the mural, the mural will light up and show you the picture
+of a beautiful woman with a red apple in her hand. if you have met the old lady, the picture reminds you a lot of her.
+
+room 55: DRAGON DEN (Option 2 item: dragon tooth, emerald key, steel armour, royal cape.)(option 3 item: dragon horn, emerald key, steel armour, royal cape)
+go west from room 52. you enter the huge burnt crater in front of you. you take time to observe the scenery. there is a climbable path to the south. (you need grappling
+hook and climbing shoes to go up this path.) there is a path to the west. you observe the burnt landscape and in the middle amidst the flames and burnt area
+you see a huge black and red dragon sleeping. it breathes heavily but you can sense this being is extremely powerful.
+options for this room:
+    1. if you equip nothing but the black robe, no clothes or nothing except the robe. then you can sneak past the dragon and avoid the entire area. you can then continue
+    to the south or west on the path.(you get nothing from this. just chance to not fight it.) if you have more items equipped you will get noticed.
+    2. you fight the dragon. (the dragon will be groggy, and only be defeated if you either have the platinum sword OR you are wearing leather armour, black robe, steel gauntlets
+    , steel helmet, fire proof underpants, steel sword, and climbing shoes. then you will win, and the dragon will get defeated. (you will recieve the Emerald key, steel armour, royal cape,
+    dragon tooth)if you try to attack you will get killed.
+    3. if you have seen the mural in room 35 you get information that there was someone before that was in only underpants, helmet and had a glowing orb. if you have equipped:
+    the fire underpants, steel helmet, and glowing red orb (and only that, you cannot have anything else equipped. ) then when you approach the dragon and he wakes and stands before you
+    you have 3 choices: hold the orb over your head, kneel or just stand there. (kneeling is the correct answer) (if you chose any of the other,
+    the dragon will loook at you weirdly and you will have to choose again)
+    the dragon will look at you, come a little closer and then breath you up the neck. The dragon will then roll around laughing at the display in front of him. you will not understand
+    what is going on and the curator will also be a bit puzzled. the dragon will introduce himself to you as Leif. he is an artist and painted the mural that you found
+    years ago to mess with people. and it never gets old. you feel a bit offended but it is also a bit funny.
+    the dragon leif gives you some items in exchange for the good laugh: (item: dragon horn, emerald key, steel armour, royal cape) he says when you believe is the opportune moment. call him
+    on the horn and he will help you that one time. he says to come back any time and he will show you some more of his murals if youd like to see some time.
+
+room 56:
+go west from room 55. there is staff here. it looks like it could be used for magic. but you are not sure. maybe you should ask someone who could help you out. (the person you are supposed to
+give this staff too is the old lady from room 26, if you go back to her she will explain that the staff spits fire, but it can only be used once.)(if you never seek out the old lady
+you will not be able to understand what the staff is for. but you can use it. only once. but if you have used the staff it cannot be used again)
+
+room 57:
+climb south from room 55. to enter the room you dont need anything. (if you do not hav ethe items you will just slide back down). there is a path
+leading south that is climbable. (you only need any set of climbing shoes on this section)
+
+room 58:
+climb south from room 57. you come to the 2nd section of the 3 section hill. there is a path leading west, and there is a climbable section to the south ( you need
+climbing shoes  and grappling hook to get to this section)
+
+room 59:(item: binoculars)
+go west from room 58. you are now on a cliff. you see the huge castle to the south. now closer than ever. it scares you. when you look around you spot a pair of
+binoculars. maybe these can be used to see something in the distance.
+
+room 60: (use binoculars)
+climb south from room 58. (you need climbing shoes and binoculars to access) this is on top of the mountain. to the north you see the ginarmous crater that the dragon
+inhabits. the scorched earth surrounding the area and the small fires running here and there.
+to the south you see the huge castle. you are so far up now that you are actually able to see the roof of the castle. roof is covered with moss, skeletons and vegetation.
+there is a possibility that you could get to that section if you where able to fly. if you use the binoculars: (you also see a staircase leading down into the castle. ) if not
+you are not sure if there is a way to get off the roof and it doesnt seem smart to go there.(if the dragon has given you
+the dragon horn, you can call the dragon only once and he will fly you to the top of the castle.) (there you can enter the castle, and you will be on the roof level of the castle)
+you can then enter the castle and go to level 3. and you will be behind the booss) (if you have the platinum sword, steel gauntlets, steel helmet, steel armour: you can defeat the boss,
+ if not then you die. ) OR if you have the firestaff and you use it on the final boss, you will win as well.*but only if you have talked to the old lady about what it can do, and how
+ to use it.
+
+BLACK CASTLE: (need emerald key to enter)
+you can enter the black castle from room 29, if you go west and have the emerald key. if you try to go west from room 29 the curator will tell you that the road takes you too a door
+and it seems you need a key to continue on this road.
+
+Level 1: (item: Goblet of gandor, poisenous darts)
+you enter a long hallway. there is a chandelier in the ceiling, in the center of the room. the room is light and cozy, almost homey but you get a bit suspicious. there is a huge table
+in the center with a lot of food. fruits, bread. anything you could dream of. it looks and feels edible (if you eat any of the fruit you will die)
+you see a huge staircase in the north area of the room. there is a stone golem blocking the way.
+he tells you you need to solve three riddles before you can continue on your journey:
+options:
+    1. you can chose to kill him. if you do the requirements are: (steel gauntlets, steel helmet, steel armour, steel sword). if you dont then you die. if you win, the items dropped
+    will be: (a relic (goblet of gandor) and darts (they seem to be poisenous))
+    2. you choose to do the riddles:
+        riddle 1:
+            "What is it that you ought to keep, when you have given it to someone else?"
+            the correct answer is: "your word".
+        riddle 2:
+            "Struck from the rock and the metal she wrought, she breathes life into ruined blade. by hosts and bandits alike she is greeted with
+            open palms, though none dare to embrace her. who is she?"
+            the correct answer: "Fire".
+        riddle 3:
+            "What is the name of the golem that lies?"
+            the correct answer: "Nord"
+    if you are able to answer all the answers correctly the golem lets you pass. he trips over himself and falls apart. from his corpse there is a goblet sticking it. you
+    can grab the goblet (goblet of gandor). you see that the reason the golem died is because he has a poisenous dart stuck to him. yo can also grab these darts.
+    you can then go up the stairs if you wish.
+
+Level 2:
+    you go up the staircase and you see that you are one level up with walkpath on either sides and there is a big gap in the middle where you can see down to the
+    1st floor. the chandelier is still high in the ceiling. you see some sapplings running around the room, there are vines and there is lights  around. it looks a lot darker
+    on this level. you see something shining in front of you. it is a silver necklace. you are a bit hessitant to pick it up. *if you try to pick it up you will die from the
+    poison that is on it.) if you dont touch it and decide to walk towards the next level instead. there is a door at the and of the corridor. when you turn your back and you
+    start walking you suddenly hear a sound behind you. you turn around quickly and see a giant tree growling at you. waiting for your next move. (if you attack him with fire
+    staff yo win imidiately.)(if you have the platinum sword OR you hav ethe steel gauntlets, steel helmet, steel armour, steel sword)\ then you also win. if you are missing
+    any then you loose.
+    if you win then the door hidden in the corner opens and reveals a staircase up to the final room.
+    you can choose to go up the stairs.
+
+Level 3:
+    this is the final room. there is an altar in the middle of the room (if you put the goblet of gandor on the altar) there will be a godly figure that ascends the walls and
+    roof (it looks almost like a ghost). congratulating you for coming so far. being really sweet and cute. the curator asks; is this really the end? the figure says absolutely not.
+    from the back of the room ( a giant merges with the ghostly figure and says: thank you for giving me back my goblet) to defeat this creature, you need to have equipped: (steel gauntlets,
+    royal cape, steel armour, steel helmet, platinum sword)(if you are missing any of the items you cannot win and you will die)
+
+    you can also win if you do not but the goblet of gandor on the pedestal but you throw poisenous darts at the shadow in the corner insted:
+    and you have to have the steel helmet, steel gauntlets, steel armour, steel sword, and climbing boots.
+
+    if you win: there will be a monolouge with that you were able to defeat the monster and that you make your way back through the castle only to find the old lady outside(if you have
+    not killed her), where she thanks you for your help. she says she looks forward to seeing more of you heheh. (maybe evil after all)
+
+
+
+
+
