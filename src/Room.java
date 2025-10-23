@@ -24,4 +24,9 @@ public abstract class Room {
     public List<Item> getItems() { return items; }
     public void setExit(String dir, Room room) { exits.put(dir, room); }
     public Room getExit(String dir) { return exits.get(dir); }
+
+
+    public Map<String, Room> getExits() {
+        return exits;
+    }
 }

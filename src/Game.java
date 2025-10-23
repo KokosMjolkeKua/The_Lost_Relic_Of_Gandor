@@ -1,237 +1,162 @@
-import javax.swing.SwingUtilities;
+
 import java.util.*;
+import javax.swing.SwingUtilities;
 
 public class Game {
-    private final Map<String, Room> rooms = new HashMap<>();
     private final Player player;
 
     public Game() {
         player = new Player();
-        createRooms();
-        linkRooms();
-        player.setCurrentRoom(rooms.get("Room1"));
+        Room start = WorldBuilder.createWorld();
+        player.setCurrentRoom(start);
+        System.out.println("[DEBUG] World created. Starting in Room 1.");
     }
 
-    private void createRooms() {
-        for (int i = 1; i <= 60; i++) {
-            Room room;
-            if (i == 3 || i == 10 || i == 14 || i == 31 || i == 45 || i == 57 || i == 58 || i == 60) {
-                room = new ClimbRoom("A steep, climbable section (Room " + i + ").", true, false);
-            } else if (i == 60) {
-                room = new DragonRoom("A towering lair. The final challenge awaits (Room 60).", new Enemy("Leif the Dragon", 250, 30));
-            } else if (i == 26) {
-                room = new OldLadyRoom("A small hut with an old lady stirring a cauldron (Room 26).");
-            } else if (i == 13 || i == 29 || i == 35 || i == 44) {
-                Riddle r;
-                switch (i) {
-                    case 13: r = new Riddle("What has an eye but cannot see?", "needle"); break;
-                    case 29: r = new Riddle("One of us always lies, the other always tells the truth. Which is the liar?", "nord"); break;
-                    case 35: r = new Riddle("Find the missing puzzle piece", "piece"); break;
-                    default: r = new Riddle("I am born in fear, raised in truth.", "courage"); break;
-                }
-                room = new PuzzleRoom("A room with an inscription. (Room " + i + ")", r);
-            } else if (i % 5 == 0 || i == 11 || i == 15 || i == 23 || i == 28 || i == 38 || i == 43 || i == 53) {
-                int hp = 18 + (i / 6) * 6;
-                int dmg = 4 + (i / 15);
-                room = new GoblinRoom("A dank clearing where a goblin lurks (Room " + i + ").", new Enemy("Goblin " + i, hp, dmg));
-            } else if (i == 55) {
-                room = new DragonRoom("A crater of blackened earth. A huge presence sleeps nearby (Room 55).", new Enemy("Broodwyrm", 160, 20));
-            } else {
-                room = new GenericRoom("Quiet corridor and mossy stone (Room " + i + ").");
-            }
+    public String look() {
+        Room cur = player.getCurrentRoom();
+        StringBuilder sb = new StringBuilder();
+        sb.append(cur.getDescription());
 
-            // Add items progressively
-            if (i == 1) {
-                room.addItem(new Item("Shoes", "Basic leather shoes (starting gear)."));
-                room.addItem(new Weapon("Short Stick", "A blunt stick. Better than nothing.", 3));
-            }
-            if (i == 4) {
-                room.addItem(new Weapon("Rusty Dagger", "Small rusty dagger.", 6));
-                room.addItem(new Armor("Leather Armor", "Thin leather armor.", 2));
-            }
-            if (i == 8) room.addItem(new Item("Rusty Key", "An old, rusty key."));
-            if (i == 9) room.addItem(new Item("Apple", "A fresh apple. Restores a small amount."));
-            if (i == 15) {
-                room.addItem(new Item("Needle", "A small needle (used for a riddle)." ));
-                room.addItem(new Item("Red Ruby", "A small red gem." ));
-            }
-            if (i == 20) room.addItem(new Item("Climbing Shoes", "Shoes suitable for climbing."));
-            if (i == 25) {
-                room.addItem(new Item("Bone Key", "A brittle bone-shaped key."));
-                room.addItem(new Item("Glowing Red Orb", "A mysterious red orb."));
-            }
-            if (i == 28) {
-                room.addItem(new Armor("Fireproof Underpants", "Protective undergarment.", 1));
-                room.addItem(new Item("Map of the World", "Marks places you've visited."));
-                room.addItem(new Item("Grappling Hook", "Useful to grab distant ledges."));
-            }
-            if (i == 31) room.addItem(new Item("Binoculars", "Allow you to see distant details."));
-            if (i == 47) room.addItem(new Weapon("Platinum Sword", "A gleaming, extremely sharp sword.", 50));
-            if (i == 48) room.addItem(new Armor("Steel Gauntlets", "Sturdy gauntlets.", 6));
-            if (i == 51) room.addItem(new Item("Climbing Shoes (Fine)", "Better climbing shoes."));
-            if (i == 56) room.addItem(new Item("Fire Staff", "Single-use staff that spits flame."));
-            if (i % 7 == 0) room.addItem(new HealingPotion("Healing Potion", "Restores 30 HP.", 30));
-
-            rooms.put("Room" + i, room);
+        if (!cur.getItems().isEmpty()) {
+            sb.append("\n\nItems here: ");
+            for (Item it : cur.getItems()) sb.append(it.getName()).append(", ");
+            sb.setLength(sb.length()-2);
         }
-    }
-
-    private void linkRooms() {
-        final int width = 10;
-        final int height = 6;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int num = y * width + x + 1;
-                Room r = rooms.get("Room" + num);
-                if (r == null) continue;
-                if (y > 0) r.setExit("north", rooms.get("Room" + ((y - 1) * width + x + 1)));
-                if (y < height - 1) r.setExit("south", rooms.get("Room" + ((y + 1) * width + x + 1)));
-                if (x > 0) r.setExit("west", rooms.get("Room" + (num - 1)));
-                if (x < width - 1) r.setExit("east", rooms.get("Room" + (num + 1)));
-            }
+        Map<String, Room> exits = cur.getExits();
+        if (exits != null && !exits.isEmpty()) {
+            sb.append("\n\nExits: ").append(String.join(", ", exits.keySet()));
         }
-
-        // extra branching links
-        rooms.get("Room31").setExit("northwest", rooms.get("Room37"));
-        rooms.get("Room4").setExit("rope-down", rooms.get("Room3"));
-        rooms.get("Room3").setExit("rope-up", rooms.get("Room4"));
-        rooms.get("Room29").setExit("west", rooms.get("Room55"));
-        rooms.get("Room10").setExit("up", rooms.get("Room14"));
-        rooms.get("Room14").setExit("down", rooms.get("Room10"));
-        rooms.get("Room48").setExit("crevice", rooms.get("Room49"));
-        rooms.get("Room58").setExit("up", rooms.get("Room60"));
-        rooms.get("Room60").setExit("down", rooms.get("Room55"));
-        rooms.get("Room28").setExit("east", rooms.get("Room30"));
-        rooms.get("Room22").setExit("secret-east", rooms.get("Room24"));
-        rooms.get("Room37").setExit("south", rooms.get("Room38"));
-        rooms.get("Room52").setExit("west", rooms.get("Room55"));
+        return sb.toString();
     }
 
     public String movePlayer(String direction) {
         Room current = player.getCurrentRoom();
+
+        // Castle gate from Room 29
+        if (current == WorldBuilder.getRoom(29) && "west".equalsIgnoreCase(direction)) {
+            boolean hasEmeraldKey = player.getInventory().stream()
+                    .anyMatch(i -> i.getName().equalsIgnoreCase("Emerald Key"));
+            if (!hasEmeraldKey) {
+                return "A massive black-iron door bars your path. An emerald-shaped slot glows faintly — you need the Emerald Key.";
+            } else {
+                Room castle = BlackCastleBuilder.createCastle();
+                player.setCurrentRoom(castle);
+                System.out.println("[DEBUG] Entered Black Castle.");
+                return "The emerald key hums in your hand. The door unlocks and swings open.\nYou step into the Black Castle...\n\n" + look();
+            }
+        }
+
         Room next = current.getExit(direction);
         if (next == null) return "You can't go that way.";
 
+        // Climb checks
         if (next instanceof ClimbRoom) {
-            boolean hasShoes = player.getInventory().stream().anyMatch(i -> i.getName().toLowerCase().contains("climbing"));
-            boolean hasHook = player.getInventory().stream().anyMatch(i -> i.getName().toLowerCase().contains("grappling"));
+            boolean hasShoes = player.isEquipped("Shoes") || player.isEquipped("Climbing Shoes");
+            boolean hasHook  = player.isEquipped("Grappling Hook");
             ClimbRoom cr = (ClimbRoom) next;
             if (!cr.canClimb(hasShoes, hasHook)) {
                 player.takeDamage(20);
-                return "You try to climb but lack the gear. You slip and take 20 damage. (HP: " + player.getHealth() + ")";
+                return "You try to climb but lack the proper gear. You slip and take 20 damage. (HP: " + player.getHealth() + ")";
             }
         }
 
         player.setCurrentRoom(next);
-        return next.getDescription();
+        System.out.println("[DEBUG] Moved to a new room.");
+        return look();
     }
 
-    public String attackEnemy() {
-        Room current = player.getCurrentRoom();
-        if (current instanceof GoblinRoom) {
-            GoblinRoom goblinRoom = (GoblinRoom) current;
-            Enemy e = goblinRoom.getEnemy();
-            if (e == null || !e.isAlive()) return "There's no living enemy here.";
-            int playerDmg = player.attack();
-            goblinRoom.attackEnemy(playerDmg);
-            StringBuilder sb = new StringBuilder();
-            sb.append("You hit ").append(e.getName()).append(" for ").append(playerDmg).append(" damage.\n");
-            if (!e.isAlive()) {
-                sb.append("You defeated ").append(e.getName()).append("!\n");
-                for (Item it : new ArrayList<>(goblinRoom.getItems())) {
-                    player.addItem(it);
-                    // optional: goblinRoom.getItems().remove(it);
-                }
-                return sb.toString();
-            } else {
-                int dmg = e.getDamage();
-                player.takeDamage(dmg);
-                sb.append(e.getName()).append(" hits you for ").append(dmg).append(" damage. (HP: ").append(player.getHealth()).append(")\n");
-                if (!player.isAlive()) sb.append("You have been slain. Game Over.");
-                return sb.toString();
-            }
-        }
-
-        if (current instanceof DragonRoom) {
-            DragonRoom dr = (DragonRoom) current;
-            Enemy e = dr.getDragon();
-            if (e == null || !e.isAlive()) return "There's no living dragon here.";
-            int playerDmg = player.attack();
-            dr.attackDragon(playerDmg);
-            StringBuilder sb = new StringBuilder();
-            sb.append("You strike ").append(e.getName()).append(" for ").append(playerDmg).append(" damage.\n");
-            if (!e.isAlive()) {
-                sb.append("You felled ").append(e.getName()).append("! The final challenge is complete — you win!\n");
-                sb.append("Congratulations — you reclaimed the Lost Relic of Galdor!");
-                return sb.toString();
-            } else {
-                int dmg = e.getDamage();
-                player.takeDamage(dmg);
-                sb.append(e.getName()).append(" breathes fire and hits you for ").append(dmg).append(" damage. (HP: ").append(player.getHealth()).append(")\n");
-                if (!player.isAlive()) sb.append("You have been burnt to ash. Game Over.");
-                return sb.toString();
-            }
-        }
-
-        return "There is nothing to attack here.";
-    }
-
-    public String solvePuzzle(String attempt) {
-        Room current = player.getCurrentRoom();
-        if (current instanceof PuzzleRoom) {
-            PuzzleRoom pr = (PuzzleRoom) current;
-            boolean ok = pr.solveRiddle(attempt);
-            if (ok) {
-                for (Item it : new ArrayList<>(pr.getItems())) {
-                    player.addItem(it);
-                }
-                return "Correct — the riddle yields a reward and a secret opens.";
-            } else {
-                return "Incorrect answer. The inscription remains silent.";
-            }
-        }
-        return "There is no riddle to solve here.";
-    }
-
-    public String pickUpItem(String itemName) {
-        Room current = player.getCurrentRoom();
+    public String pickUpItem(String name) {
+        Room cur = player.getCurrentRoom();
         Item found = null;
-        for (Item it : current.getItems()) {
-            if (it.getName().equalsIgnoreCase(itemName)) { found = it; break; }
+        for (Item it : new ArrayList<>(cur.getItems())) {
+            if (it.getName().equalsIgnoreCase(name)) { found = it; break; }
         }
-        if (found == null) return "There is no '" + itemName + "' here.";
-        current.getItems().remove(found);
-        player.addItem(found);
-        return "You picked up: " + found.getName();
+        if (found == null) return "No item named '" + name + "' here.";
+        cur.getItems().remove(found); // prevent duplicates on revisit
+        player.getInventory().add(found);
+        System.out.println("[DEBUG] Picked up item: " + found.getName());
+        return "You pick up the " + found.getName() + ".";
     }
 
-    public String useItem(String itemName) {
+    public String unequipItem(String name) {
+        if (name == null || name.trim().isEmpty()) return "Unequip what?";
+        player.unequipByName(name.trim());
+        System.out.println("[DEBUG] Unequipped: " + name.trim());
+        return "You unequip " + name.trim() + ".";
+    }
+
+    public String checkGear() {
+        return player.equippedSummary();
+    }
+
+    public String useItem(String name) {
+        if (name == null || name.trim().isEmpty()) return "Use what?";
+        String target = name.trim();
+
+        // Find the item in inventory
         Item found = null;
         for (Item it : player.getInventory()) {
-            if (it.getName().equalsIgnoreCase(itemName)) { found = it; break; }
+            if (it.getName().equalsIgnoreCase(target)) { found = it; break; }
         }
-        if (found == null) return "You don't have a '" + itemName + "'.";
-        if (found instanceof HealingPotion) {
-            HealingPotion hp = (HealingPotion) found;
+        if (found == null) return "You don't have '" + target + "'.";
+
+        // Contextual rule: Rusty Dagger breaks if used on Room 6 "door"
+        if (player.getCurrentRoom() == WorldBuilder.getRoom(6) && found.getName().equalsIgnoreCase("Rusty Dagger")) {
+            // Break the dagger
             player.getInventory().remove(found);
-            player.heal(hp.getHealAmount());
-            return "You drink the potion and restore " + hp.getHealAmount() + " HP. (HP: " + player.getHealth() + ")";
+            player.unequipByName(found.getName());
+            System.out.println("[DEBUG] Rusty Dagger broke on Room 6 door.");
+            return "You strike the heavy metal door with your Rusty Dagger.\nThe blade snaps in two — it's useless now.";
         }
+
+        // Equip/activate without consuming
         if (found instanceof Weapon) {
             player.equipWeapon((Weapon) found);
-            return "You equip the " + found.getName() + ".";
+            System.out.println("[DEBUG] Equipped weapon: " + found.getName());
+            return found.getName() + " equipped.";
         }
         if (found instanceof Armor) {
             player.equipArmor((Armor) found);
-            return "You put on " + found.getName() + ".";
+            System.out.println("[DEBUG] Equipped armor: " + found.getName());
+            return found.getName() + " equipped.";
         }
-        return "You can't use that item right now.";
+
+        // Generic items equip by name (Shoes, Climbing Shoes, Grappling Hook)
+        player.equipByName(found.getName());
+        System.out.println("[DEBUG] Equipped item: " + found.getName());
+        return found.getName() + " equipped.";
+    }
+
+    public String attackEnemy() {
+        Room cur = player.getCurrentRoom();
+        Enemy target = null;
+        if (cur instanceof GoblinRoom) {
+            target = ((GoblinRoom) cur).getEnemy();
+        } else if (cur instanceof DragonRoom) {
+            target = ((DragonRoom) cur).getDragon();
+        }
+        if (target == null) return "There is nothing here to attack.";
+
+        int dmg = player.attack();
+        target.takeDamage(dmg);
+        if (!target.isAlive()) {
+            if (cur instanceof GoblinRoom) ((GoblinRoom) cur).removeEnemy();
+            System.out.println("[DEBUG] Enemy defeated: " + target.getName());
+            return "You strike for " + dmg + " and defeat the " + target.getName() + "!";
+        }
+        player.takeDamage(target.getDamage());
+        return "You strike for " + dmg + ". The " + target.getName() + " hits back for " + target.getDamage() + ". (HP: " + player.getHealth() + ")";
+    }
+
+    public String solvePuzzle(String answer) {
+        Room cur = player.getCurrentRoom();
+        if (!(cur instanceof PuzzleRoom)) return "There is no puzzle to solve here.";
+        PuzzleRoom pr = (PuzzleRoom) cur;
+        boolean ok = pr.solveRiddle(answer);
+        System.out.println("[DEBUG] Puzzle attempted. Success=" + ok);
+        return ok ? "You solve the riddle: " + pr.getRiddle().getQuestion() + "\nA mechanism clicks somewhere."
+                  : "That doesn't seem right.";
     }
 
     public Player getPlayer() { return player; }
-    public Room getRoom(String key) { return rooms.get(key); }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Game());
-    }
 }
