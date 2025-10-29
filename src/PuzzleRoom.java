@@ -1,4 +1,4 @@
-public class PuzzleRoom extends GenericRoom {
+public class PuzzleRoom extends Room {
     private final Riddle riddle;
 
     public PuzzleRoom(String description, Riddle riddle) {

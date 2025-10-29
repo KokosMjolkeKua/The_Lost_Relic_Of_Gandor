@@ -1,11 +1,11 @@
 
 import java.util.*;
-import javax.swing.SwingUtilities;
 
 public class Game {
     private final Player player;
 
     public Game() {
+        System.out.println("[INFO] Game initialized — v11 Golden Compass Edition");
         player = new Player();
         Room start = WorldBuilder.createWorld();
         player.setCurrentRoom(start);

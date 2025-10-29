@@ -1,3 +1,3 @@
-public class OldLadyRoom extends GenericRoom {
+public class OldLadyRoom extends Room {
     public OldLadyRoom(String description) { super(description); }
 }
