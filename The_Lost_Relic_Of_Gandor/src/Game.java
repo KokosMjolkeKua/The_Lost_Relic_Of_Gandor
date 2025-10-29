@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 public class Game {
@@ -154,7 +155,7 @@ public class Game {
         boolean ok = pr.solveRiddle(answer);
         System.out.println("[DEBUG] Puzzle attempted. Success=" + ok);
         return ok ? "You solved the riddle: " + pr.getRiddle().getQuestion() + "\nA mechanism clicks somewhere..."
-                : "That doesn't seem right...";
+                  : "That doesn't seem right...";
     }
 
     public Player getPlayer() { return player; }

@@ -1,0 +1,52 @@
+ITEMS:
+
+Weapon:
+- rusty dagger
+- steel sword
+- bow and arrow
+- platinum sword
+- fire staff
+- shield
+- poisenous darts
+
+Keys:
+- rusty key
+- bone key
+- emerald key
+- stone key
+
+Consumable:
+- apple
+- healing potion
+
+
+Clothing:
+    head:
+        - steel helmet
+    body:
+        - leather armour (thin)
+        - steel armour
+        - fire proof underpants
+    feet:
+        - shoes
+        - climbing shoes
+    hands:
+        - gauntlets of fur
+        - steel gauntlets
+    cape:
+        - black robe
+        - royal cape
+
+
+Important items:
+- jigsaw puzzle piece
+- grappling hook
+- needle
+- glowing red orb
+- world map(that updates when you move around)
+- binoculars
+- goblet of gandor
+
+Jewels:
+- ruby
+- sapphire

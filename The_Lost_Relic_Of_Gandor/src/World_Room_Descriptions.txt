@@ -1,0 +1,161 @@
+Part I: Overworld
+ROOM 1:
+You stand in a quiet forest clearing. The way behind is blocked by dense trees. A single path leads
+north. Your shoes are in your inventory, ready to equip.
+ROOM 2:
+You step north into a mossy forest. Sunlight filters through thick branches. The air smells damp. Paths
+lead north and west.
+ROOM 3:
+The northern path ends at a muddy cliff. Sunlight warms the rocks. You can attempt to climb. Without
+shoes, a fall is deadly.
+ROOM 4:
+Atop the cliff, you find a small campsite with leather armour, fur gauntlets, and a rusty dagger. The
+clearing offers a distant view of a castle. No other paths exist; climb down using the attached rope.
+ROOM 5:
+Heading west, vegetation thickens. The wind rustles the leaves, but nothing is visible. The trail
+continues west.
+ROOM 6:
+You find a large metal and wood door embedded in the mountainside, with a rusty keyhole. A path also
+leads west. Without the rusty key, the door does not budge. Attacking with the rusty dagger will break it.
+ROOM 7:
+A stone wall features a mural depicting a great battle. Something small glimmers within. Using the rusty
+dagger reveals a square sapphire. Paths continue north and west.
+ROOM 8:
+A small clearing holds a rusty key atop burnt clothing.
+ROOM 9:
+Brush and barbed wire fill the area. An apple lies nearby to pick up.
+ROOM 10:
+Using the rusty key, you unlock the door from room 6. A long corridor stretches ahead. At the end,
+paths lead north and east. Climbing the eastern section requires climbing shoes or a grappling hook;
+without confirmation, attempting may cause death.
+ROOM 11:
+A goblin lurks ahead. You hide in a bush. Bare-handed attacks prompt confirmation. Paths exist north
+and west, though the western path is blocked.
+ROOM 12:
+A clearing filled with butterflies spreads out before you. The path continues north.
+ROOM 13:
+A rock wall blocks the way. An inscription reads: 'What has an eye but cannot see?' You need a needle
+to proceed.
+ROOM 14:
+Climbing from room 10, the path west leads to room 11. Another path continues north.
+ROOM 15:
+A goblin appears. You must attack immediately or wait and be killed. The goblin drops a needle and a
+red ruby. Only the return path exists.
+ROOM 16:
+Dense forest surrounds you. Paths lead south, east, and north. A light rain begins.
+ROOM 17:
+A chilling mural of flowers lies in a small clearing.
+ROOM 18:
+A slime approaches. It does no damage. You may run or attack, causing it to flee.
+ROOM 19:
+Dense forest continues. Paths lead south and east.
+ROOM 20:
+A cold, dead campfire rests nearby. A skeleton lies beside a sack containing climbing shoes.
+ROOM 21:
+A goblin spots you and flees east. Paths continue east and north.
+ROOM 22:
+A long path with murky waters stretches north, swamp-like on both sides.
+ROOM 23:
+A stronger goblin requires the rusty dagger to defeat. It drops five arrows and a broken bow. A path
+leads east.
+ROOM 24:
+Swampy paths continue east and south.
+ROOM 25:
+A small chest hides a glowing red orb, a bone key, and two rubies.
+ROOM 26:
+A small hut appears with eerie music and cackling inside. Peering through the window, you see an old
+lady brewing in a pot. Options: 1. Attack if fully equipped to claim black robe, two healing potions, a
+sapphire, and a shield. 2. Decline her drink and fight if equipped to survive. 3. Give her an apple to earn
+her favor, black robe, two healing potions, and the ability to trade.
+ROOM 27:
+A clearing lies east of room 21. A goblin camp is visible south. The only path leads south.
+ROOM 28:
+The goblin camp is small but fortified. Initial goblins must be defeated with arrows. The goblin lord
+requires both shield and sword. Rewards: 5 rubies, stone key, fireproof underpants, and a world map.
+ROOM 29:
+Two goblins guard a massive northern door. Solve a riddle and provide the bone key and sapphire to
+pass. Fighting is futile.
+ROOM 30:
+A clearing opens with a path south.
+ROOM 31:
+A steep hill rises south of room 30. At the top, you see the castle to the west and a secret path
+northwest to rooms 32-37. Climbing requires boots.
+ROOM 32:
+Dense forest continues north. A secret eastern path appears only if you have visited room 31.
+ROOM 33:
+Paths branch east and west.
+ROOM 34:
+Path leads south from the west branch.
+ROOM 35:
+A stone jigsaw puzzle lies ahead. Completing it reveals a mural of a man kneeling before a massive
+dragon with a red orb — a hint for later.
+ROOM 36:
+A path leads north from the east branch.
+ROOM 37:
+The secret path east leads to a small clearing. Rustling comes from the south. Paths continue east,
+north, and south.
+ROOM 38:
+A goblin threatens prisoners. Attack quickly to save them.
+ROOM 39:
+A glimmering chest in rocks holds an apple.
+ROOM 40:
+A cliff edge reveals a skeleton in partial armor. Only a steel helmet remains intact.
+ROOM 41:
+A goblin is here. Use the black robe to sneak past or confront him. Path continues north.
+ROOM 42:
+A clearing stretches with paths east and west.
+ROOM 43:
+A goblin guards this area. Attacking yields a ruby. Using the black robe allows sneaking. Path continues
+north.
+ROOM 44:
+A chest bears a riddle: 'I am born in fear, raised in truth, and come to my own in deed.' Correct answer
+'courage' opens it to reveal a missing jigsaw puzzle piece.
+ROOM 45:
+A climbable path south requires climbing boots and grappling hook. Path north is available.
+ROOM 46:
+Atop the hill, the path west leads to a platinum sword, and north continues further.
+ROOM 47:
+A small rock holds the platinum sword. Must have defeated 8 goblins and/or the Dragon to claim it.
+ROOM 48:
+Brush conceals a crevice. Steel gauntlets lie within. Path east is possible to squeeze through.
+ROOM 49:
+North path continues from 45 or via crevice from 48.
+ROOM 50:
+Path continues north, with an east branch.
+ROOM 51:
+A peaceful flower garden holds climbing boots if you sit for 60 seconds.
+ROOM 52:
+Paths lead west to a barren canyon, north, and east.
+ROOM 53:
+A goblin offers to join as a follower or can be fought for a ruby.
+ROOM 54:
+A mural requires a ruby to reveal a woman holding an apple.
+ROOM 55:
+The Dragon's den: massive burnt crater. The black and red dragon sleeps. Options: sneak with black
+robe, fight with full equipment, or kneel with orb per mural hint. Rewards include dragon horn, emerald
+key, steel armour, royal cape.
+ROOM 56:
+A staff rests here, potentially magical. Ask the old lady for its use; it can only be used once.
+ROOM 57:
+Climb south with any boots to a new path.
+ROOM 58:
+Second hill section: path west or climb south with boots and grappling hook.
+ROOM 59:
+A cliff reveals the castle below. Binoculars can be picked up.
+ROOM 60:
+Top of the mountain, climb south with boots and binoculars. View dragon's crater north and castle
+south. Binoculars reveal a staircase into the castle.
+
+Part II: Black Castle
+LEVEL 1:
+A long, cozy hallway with a chandelier. A feast lies on the table, but eating is deadly. A stone golem
+blocks the staircase north. Solve riddles or fight if equipped with steel gear. Rewards include the Goblet
+of Gandor and poisonous darts.
+LEVEL 2:
+Upstairs, a walkpath surrounds a large gap. A silver necklace shines, but touching it is deadly. A
+growling tree blocks the next corridor. Defeat it with platinum sword, steel gear, or fire staff. A hidden
+door reveals stairs to the final level.
+LEVEL 3:
+The final room has an altar. Placing the Goblet of Gandor summons a divine figure. To defeat the
+shadowy entity, you must have full steel gear and royal cape, or throw poisonous darts with climbing
+boots. Victory leads to the old lady outside thanking you.
