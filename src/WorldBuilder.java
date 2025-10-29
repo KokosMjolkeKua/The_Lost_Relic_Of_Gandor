@@ -2,14 +2,6 @@
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Centralized world construction for The Lost Relic of Galdor.
- * Builds Rooms 1–60 (Overworld) and stubs connectors for the Black Castle levels.
- *
- * NOTE: Many conditional/branch mechanics (climb checks, death checks, puzzles gating)
- * should be handled in Game command handling. Here we define rooms, descriptions,
- * items placed, and static exits between rooms per the design doc.
- */
 public class WorldBuilder {
 
     private static final Map<Integer, Room> rooms = new HashMap<>();
@@ -17,16 +9,16 @@ public class WorldBuilder {
     public static Room createWorld() {
         // ---------- Instantiate all rooms ----------
         // Using appropriate subclasses when it adds behavior clarity.
-        Room r1  = reg(1,  new GenericRoom("You stand in a quiet forest clearing. The way behind is blocked by dense trees. A single path leads north. Your shoes are in your inventory, ready to equip."));
-        Room r2  = reg(2,  new GenericRoom("You step north into a mossy forest. Sunlight filters through thick branches. The air smells damp. Paths lead north and west."));
-        Room r3  = reg(3,  new ClimbRoom("The northern path ends at a muddy cliff. Sunlight warms the rocks. You can attempt to climb. Without shoes, a fall is deadly.", true, false));
-        Room r4  = reg(4,  new GenericRoom("Atop the cliff, you find a small campsite with leather armour, fur gauntlets, and a rusty dagger. The clearing offers a distant view of a castle. No other paths exist; climb down using the attached rope."));
-        Room r5  = reg(5,  new GenericRoom("Heading west, vegetation thickens. The wind rustles the leaves, but nothing is visible. The trail continues west."));
-        Room r6  = reg(6,  new GenericRoom("You close in on a clearing and see a big metal and wood door with a rusty keyhole in the mountain that would lead north. There is also a path to the west. Without the rusty key, the door does not budge. Attacking with the rusty dagger will break it."));
-        Room r7  = reg(7,  new PuzzleRoom("A stone wall features a mural depicting a great battle. Something small glimmers within. Using the rusty dagger reveals a square sapphire. Paths continue north and west.", new Riddle("What do you use to pry the glimmering square?", "rusty dagger")));
-        Room r8  = reg(8,  new GenericRoom("A small clearing holds a rusty key atop burnt clothing."));
-        Room r9  = reg(9,  new GenericRoom("Brush and barbed wire fill the area. An apple lies nearby to pick up."));
-        Room r10 = reg(10, new GenericRoom("Past the unlocked door is a long corridor. At the end, a path leads north, and to the east is a steep climb (needs climbing shoes or a grappling hook). If you insist on climbing ill‑prepared, you will fall."));
+        Room r1  = reg(1,  new GenericRoom("You stand in a quiet forest clearing. The way behind is blocked by dense trees. A single path leads north. Your shoes, previously stored in your inventory, ready to be equipped."));
+        Room r2  = reg(2,  new GenericRoom("You step north into a mossy forest. Sunlight filters through thick branches. The air smells damp... The path splits leading north and west."));
+        Room r3  = reg(3,  new ClimbRoom("The northern path ends at a muddy cliff. Sunlight warms the rocks. You can attempt to climb... But, without shoes, a fall is deadly.", true, false));
+        Room r4  = reg(4,  new GenericRoom("Atop the cliff, you find a small campsite with some still good looking items scattered about.. The clearing offers a distant view of an ominous castle. The only path leads back where you came from, you can climb down using the rope attached to the campsite."));
+        Room r5  = reg(5,  new GenericRoom("Heading west, vegetation thickens. The wind rustles in the leaves, but nothing is visible... The trail continues west."));
+        Room r6  = reg(6,  new GenericRoom("You close in on a clearing and see a big metal and wood door with a rusty keyhole.. the door leads north. There is also a path to the west. Even if you tried, the door doesnt look movable.."));
+        Room r7  = reg(7,  new PuzzleRoom("A stone wall features a mural depicting a great battle. Something small glimmers within. There are paths leading north and west.", new Riddle("What do you use to pry the glimmering square?", "rusty dagger")));
+        Room r8  = reg(8,  new GenericRoom("A small clearing opens up, and you find a pile of burnt clothes with something shimmering atop it."));
+        Room r9  = reg(9,  new GenericRoom("Brush and barbed wire fill the area. A single Apple hangs in the brush tangled in the wire."));
+        Room r10 = reg(10, new GenericRoom("Past the unlocked door is a long corridor. At the end a clearing opens up to reveal the path continuing north. To the east you also see a climbable hill, but it seems to be much more advanced than what you've faced before... If you insist on climbing ill‑prepared, you will fall.")); //(needs climbing shoes or a grappling hook)
         Room r11 = reg(11, new GoblinRoom("A goblin is here. You hide in a bush to decide what to do. Paths lead west (blocked), and north.", new Enemy("Goblin", 12, 3)));
         Room r12 = reg(12, new GenericRoom("A clearing with butterflies drifting lazily. The path continues north."));
         Room r13 = reg(13, new PuzzleRoom("A rock wall blocks the way. An inscription reads: 'What has an eye but cannot see?'", new Riddle("What has an eye but cannot see?", "needle")));

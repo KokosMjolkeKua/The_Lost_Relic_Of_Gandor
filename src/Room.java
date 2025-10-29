@@ -13,7 +13,7 @@ public abstract class Room {
     public String getDescription() {
         StringBuilder sb = new StringBuilder(description);
         if (!items.isEmpty()) {
-            sb.append("\nItems here: ");
+            sb.append("\nItems: ");
             for (Item i : items) sb.append(i.getName()).append(", ");
             sb.setLength(sb.length() - 2);
         }

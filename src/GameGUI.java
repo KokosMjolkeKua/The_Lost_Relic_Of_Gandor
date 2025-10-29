@@ -12,6 +12,7 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
+
 public class GameGUI extends JFrame {
 
     // ======= Config =======
@@ -53,6 +54,8 @@ public class GameGUI extends JFrame {
     private final JButton btnHelp      = new JButton("Help");
     private final JButton btnHint      = new JButton("Hint");
     private final JButton btnSpeak     = new JButton("Speak");
+    private final JButton btnAttack    = new JButton("Attack");
+    private final JButton btnGive      = new JButton("Give");
 
     // Keep a direct reference to the Inventory title so theme changes are easy
     private final JLabel invTitleLabel = new JLabel("Inventory", SwingConstants.LEFT);
@@ -122,7 +125,7 @@ public class GameGUI extends JFrame {
         // (3) Command input (framed)
         commandField.setFont(MONO_FONT);
         commandField.setBorder(new EmptyBorder(10, 12, 10, 12));
-        commandField.setToolTipText("Type commands: north | take key | use potion | equip sword | solve riddle");
+        commandField.setToolTipText("Type commands: north | take key | use potion | equip sword | solve riddle | give item");
         JPanel commandFrame = framed(commandField, 3);
         commandFrame.setPreferredSize(new Dimension(720, 46));
 
@@ -168,8 +171,8 @@ public class GameGUI extends JFrame {
         JPanel rightTopFrame = framed(rightTopInner, 3);
 
         // (5) Bottom: Buttons + Avatar (framed)
-        JPanel buttonRow = new JPanel(new GridLayout(2, 2, 8, 8));
-        for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak}) {
+        JPanel buttonRow = new JPanel(new GridLayout(2, 3, 8, 8)); // 3x2 grid
+        for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak, btnAttack, btnGive}) {
             b.setFocusPainted(false);
             b.setFont(UI_FONT);
             buttonRow.add(b);
@@ -229,6 +232,25 @@ public class GameGUI extends JFrame {
         btnHelp.addActionListener(e -> { if (!typingActive) showHelp(); });
         btnHint.addActionListener(e -> { if (!typingActive) appendStoryTypewriter("Hint: Explore thoroughly. Try LOOK, and experiment with USE, EQUIP, and SOLVE in puzzle rooms."); });
         btnSpeak.addActionListener(e -> { if (!typingActive) performSpeakAction(); });
+
+        btnAttack.addActionListener(e -> {
+            if (typingActive) return;
+            String out = game.attackEnemy();
+            appendStoryTypewriter(out);
+            updateHP();
+        });
+
+        btnGive.addActionListener(e -> {
+            if (typingActive) return;
+            String item = JOptionPane.showInputDialog(this, "What would you like to give?", "Give", JOptionPane.QUESTION_MESSAGE);
+            if (item != null) {
+                item = item.trim();
+                if (!item.isEmpty()) {
+                    String out = tryGive(item);
+                    appendStoryTypewriter(out);
+                }
+            }
+        });
     }
 
     // ======= Intro =======
@@ -249,7 +271,7 @@ public class GameGUI extends JFrame {
         }
 
         // Title + intro text
-        String title = "THE LOST RELIC OF GANDOR\n\n";
+        String title = "THE LOST RELIC OF GALDOR\n\n";
         String intro = loadIntroText();
         appendStoryTypewriter(title + intro, () -> {
             // After intro, initialize gameplay view
@@ -274,7 +296,7 @@ public class GameGUI extends JFrame {
         } catch (Exception ignored) {}
         // Fallback: placeholder text. Replace with your original intro by creating images/intro.txt
         return "A whisper stirs the stillness of the old woods. Lanterns sway where no wind moves, and somewhere, a relic dreams of being found...\n" +
-                "Legends call it the Gandor Relic — a light for the lost and a doom for the unworthy. Few who sought it ever returned.\n" +
+                "Legends call it the Galdor Relic — a light for the lost and a doom for the unworthy. Few who sought it ever returned.\n" +
                 "Tonight, fate turns its gaze to you.";
     }
 
@@ -284,6 +306,8 @@ public class GameGUI extends JFrame {
         btnHelp.setEnabled(enabled);
         btnHint.setEnabled(enabled);
         btnSpeak.setEnabled(enabled);
+        btnAttack.setEnabled(enabled);
+        btnGive.setEnabled(enabled);
     }
 
     // ======= Command handling =======
@@ -316,6 +340,9 @@ public class GameGUI extends JFrame {
         } else if (cmd.startsWith("solve ")) {
             String answer = cmd.replaceFirst("^solve\\s+", "");
             out = game.solvePuzzle(answer);
+        } else if (cmd.startsWith("give ")) {
+            String item = cmd.replaceFirst("^give\\s+", "").trim();
+            out = tryGive(item);
         } else if (cmd.equals("inventory") || cmd.equals("inv") || cmd.equals("i")) {
             String inv = getInventoryText();
             out = inv.isEmpty() ? "Your inventory is empty." : "Inventory:\n" + inv;
@@ -324,7 +351,7 @@ public class GameGUI extends JFrame {
         } else if (cmd.equals("speak")) {
             out = performSpeakAction();
         } else {
-            out = "I don't understand that. Try: look, north/south/east/west, take <item>, use <item>, equip <item>, solve <answer>.";
+            out = "I don't understand that. Try: look, north/south/east/west, take <item>, use <item>, equip <item>, give <item>, solve <answer>.";
         }
 
         appendStoryTypewriter(out);
@@ -333,6 +360,20 @@ public class GameGUI extends JFrame {
         applyThemeForCurrentRoom(false);
         updateSceneImageForCurrentRoom(false);
         updateAvatarForGear();
+    }
+
+    // ======= Safe Give fallback =======
+    private String tryGive(String item) {
+        if (item == null || item.isEmpty()) return "Give what?";
+        try {
+            java.lang.reflect.Method m = game.getClass().getMethod("giveItem", String.class);
+            Object res = m.invoke(game, item);
+            return (res != null) ? res.toString() : "You try to give '" + item + "', but nothing happens.";
+        } catch (NoSuchMethodException ns) {
+            return "You try to give '" + item + "', but there's no one here to accept it.";
+        } catch (Exception ex) {
+            return "You try to give '" + item + "', but nothing happens.";
+        }
     }
 
     // ======= Speak button/command =======
@@ -345,7 +386,7 @@ public class GameGUI extends JFrame {
         } else if (roomType.equalsIgnoreCase("GoblinRoom")) {
             msg = "You try speaking to the goblin. It snarls back — not very conversational.";
         } else if (roomType.equalsIgnoreCase("DragonRoom")) {
-            msg = "You address the dragon. It rumbles, smoke curling from its nostrils... You best choose your next action wisely.";
+            msg = "You address the dragon. It rumbles, smoke curling from its nostrils... Best choose your next action wisely.";
         } else {
             msg = "Not very effective.";
         }
@@ -472,7 +513,7 @@ public class GameGUI extends JFrame {
         invTitleLabel.setForeground(fg);
 
         // Buttons
-        for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak}) {
+        for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak, btnAttack, btnGive}) {
             b.setBackground(blend(bg, accent, 0.15));
             b.setForeground(fg);
         }
