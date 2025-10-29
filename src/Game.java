@@ -5,7 +5,7 @@ public class Game {
     private final Player player;
 
     public Game() {
-        System.out.println("[INFO] Game initialized — v11 Golden Compass Edition");
+        System.out.println("[INFO] Game initialized");
         player = new Player();
         Room start = WorldBuilder.createWorld();
         player.setCurrentRoom(start);
@@ -18,7 +18,7 @@ public class Game {
         sb.append(cur.getDescription());
 
         if (!cur.getItems().isEmpty()) {
-            sb.append("\n\nItems here: ");
+            sb.append("\n\nItems: ");
             for (Item it : cur.getItems()) sb.append(it.getName()).append(", ");
             sb.setLength(sb.length()-2);
         }
@@ -37,7 +37,7 @@ public class Game {
             boolean hasEmeraldKey = player.getInventory().stream()
                     .anyMatch(i -> i.getName().equalsIgnoreCase("Emerald Key"));
             if (!hasEmeraldKey) {
-                return "A massive black-iron door bars your path. An emerald-shaped slot glows faintly — you need the Emerald Key.";
+                return "A massive black-iron door bars your path. An emerald-shaped slot glows faintly..."; //you need the emerald key
             } else {
                 Room castle = BlackCastleBuilder.createCastle();
                 player.setCurrentRoom(castle);
@@ -150,12 +150,12 @@ public class Game {
 
     public String solvePuzzle(String answer) {
         Room cur = player.getCurrentRoom();
-        if (!(cur instanceof PuzzleRoom)) return "There is no puzzle to solve here.";
+        if (!(cur instanceof PuzzleRoom)) return "There is no puzzle to solve here...";
         PuzzleRoom pr = (PuzzleRoom) cur;
         boolean ok = pr.solveRiddle(answer);
         System.out.println("[DEBUG] Puzzle attempted. Success=" + ok);
-        return ok ? "You solve the riddle: " + pr.getRiddle().getQuestion() + "\nA mechanism clicks somewhere."
-                  : "That doesn't seem right.";
+        return ok ? "You solved the riddle: " + pr.getRiddle().getQuestion() + "\nA mechanism clicks somewhere..."
+                  : "That doesn't seem right...";
     }
 
     public Player getPlayer() { return player; }
