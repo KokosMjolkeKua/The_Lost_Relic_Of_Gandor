@@ -12,7 +12,6 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
-
 public class GameGUI extends JFrame {
 
     // ======= Config =======
@@ -29,7 +28,6 @@ public class GameGUI extends JFrame {
 
     // ======= Game & State =======
     private final Game game;
-    private boolean introPlayed = false;
     private boolean typingActive = false;
 
     // ======= UI: Containers =======
@@ -56,10 +54,14 @@ public class GameGUI extends JFrame {
     private final JButton btnHint      = new JButton("Hint");
     private final JButton btnSpeak     = new JButton("Speak");
 
+    // Keep a direct reference to the Inventory title so theme changes are easy
+    private final JLabel invTitleLabel = new JLabel("Inventory", SwingConstants.LEFT);
+
     // For color theme fading (applies to *inner* panels; outer stays dark)
     private Color currentBg = new Color(245, 240, 225);
     private Color currentFg = new Color(40, 30, 20);
     private Color currentAccent = new Color(120, 85, 60);
+    private Color currentTitleBar = new Color(210, 200, 180);
 
     public GameGUI(Game game) {
         super("The Lost Relic of Galdor");
@@ -85,10 +87,10 @@ public class GameGUI extends JFrame {
         root.setBorder(new EmptyBorder(10, 10, 10, 10));
     }
 
-    private JPanel framed(JComponent inner) {
+    private JPanel framed(JComponent inner, int thickness) {
         JPanel wrap = new JPanel(new BorderLayout());
         wrap.add(inner, BorderLayout.CENTER);
-        wrap.setBorder(new LineBorder(Color.BLACK, 3, false));
+        wrap.setBorder(new LineBorder(Color.BLACK, thickness));
         return wrap;
     }
 
@@ -104,7 +106,7 @@ public class GameGUI extends JFrame {
 
         // (1) Scene image (framed)
         sceneImagePanel.setPreferredSize(new Dimension(720, 260));
-        JPanel sceneFrame = framed(sceneImagePanel);
+        JPanel sceneFrame = framed(sceneImagePanel, 3);
 
         // (2) Story text (framed)
         storyArea.setEditable(false);
@@ -114,14 +116,14 @@ public class GameGUI extends JFrame {
         storyArea.setBorder(new EmptyBorder(12, 12, 12, 12));
         JScrollPane storyScroll = new JScrollPane(storyArea);
         storyScroll.setBorder(null);
-        JPanel storyFrame = framed(storyScroll);
+        JPanel storyFrame = framed(storyScroll, 3);
         storyFrame.setPreferredSize(new Dimension(720, 320));
 
         // (3) Command input (framed)
         commandField.setFont(MONO_FONT);
         commandField.setBorder(new EmptyBorder(10, 12, 10, 12));
         commandField.setToolTipText("Type commands: north | take key | use potion | equip sword | solve riddle");
-        JPanel commandFrame = framed(commandField);
+        JPanel commandFrame = framed(commandField, 3);
         commandFrame.setPreferredSize(new Dimension(720, 46));
 
         leftStack.add(sceneFrame);
@@ -131,7 +133,7 @@ public class GameGUI extends JFrame {
         leftStack.add(commandFrame);
 
         // ----- RIGHT SIDE -----
-        // (4) Top: HP + Inventory (framed)
+        // (4) Top: HP + Inventory (outer framed)
         JPanel hpPanel = new JPanel(new BorderLayout());
         hpPanel.setOpaque(false);
         JLabel hpLbl = new JLabel("HP", SwingConstants.LEFT);
@@ -144,24 +146,26 @@ public class GameGUI extends JFrame {
         hpPanel.add(hpBar, BorderLayout.CENTER);
         hpPanel.setBorder(new EmptyBorder(6, 10, 8, 10));
 
-        // Inventory with attached title bar
-        JLabel invTitle = new JLabel("Inventory", SwingConstants.LEFT);
-        invTitle.setOpaque(true); // so it looks like a title bar
-        invTitle.setBorder(new EmptyBorder(8, 10, 8, 10));
-        invTitle.setFont(UI_FONT.deriveFont(Font.BOLD));
-        JPanel invTitleBar = new JPanel(new BorderLayout());
-        invTitleBar.add(invTitle, BorderLayout.CENTER);
+        // Inventory with attached title bar and inner 2px border
+        invTitleLabel.setOpaque(true); // so it looks like a title bar
+        invTitleLabel.setBorder(new EmptyBorder(8, 10, 8, 10));
+        invTitleLabel.setFont(UI_FONT.deriveFont(Font.BOLD));
 
         inventoryList.setVisibleRowCount(10);
         JScrollPane invScroll = new JScrollPane(inventoryList);
-        invScroll.setBorder(new EmptyBorder(0,0,0,0));
+        invScroll.setBorder(new LineBorder(Color.BLACK, 2)); // inner 2px border
+
+        JPanel invStack = new JPanel(new BorderLayout());
+        invStack.add(invTitleLabel, BorderLayout.NORTH);
+        invStack.add(invScroll, BorderLayout.CENTER);
+        invStack.setBorder(new EmptyBorder(4, 4, 4, 4));
+
+        JPanel inventoryOuterFrame = framed(invStack, 3); // outer 3px border
 
         JPanel rightTopInner = new JPanel(new BorderLayout());
         rightTopInner.add(hpPanel, BorderLayout.NORTH);
-        rightTopInner.add(invTitleBar, BorderLayout.CENTER);
-        rightTopInner.add(invScroll, BorderLayout.SOUTH);
-
-        JPanel rightTopFrame = framed(rightTopInner);
+        rightTopInner.add(inventoryOuterFrame, BorderLayout.CENTER);
+        JPanel rightTopFrame = framed(rightTopInner, 3);
 
         // (5) Bottom: Buttons + Avatar (framed)
         JPanel buttonRow = new JPanel(new GridLayout(2, 2, 8, 8));
@@ -182,8 +186,7 @@ public class GameGUI extends JFrame {
         JPanel bottomInner = new JPanel(new BorderLayout(10, 10));
         bottomInner.add(buttonWrap, BorderLayout.CENTER);
         bottomInner.add(avatarWrap, BorderLayout.EAST);
-
-        JPanel rightBottomFrame = framed(bottomInner);
+        JPanel rightBottomFrame = framed(bottomInner, 3);
 
         // Assemble right side
         JPanel rightStack = new JPanel();
@@ -230,12 +233,10 @@ public class GameGUI extends JFrame {
 
     // ======= Intro =======
     private void playIntroSequence() {
-        introPlayed = true;
         setControlsEnabled(false);
-        // Set outer darkness + inner neutral
+        // Clear text and show intro image
         storyArea.setText("");
         updatePanelBordersAndBackgrounds();
-        // Show intro image
         try {
             if (new File(INTRO_IMAGE).exists()) {
                 BufferedImage img = ImageIO.read(new File(INTRO_IMAGE));
@@ -407,7 +408,8 @@ public class GameGUI extends JFrame {
     }
 
     private void updateAvatarForGear() {
-        // Placeholder hook for future gear-based avatars
+        // Optional: change avatar image based on equipped items
+        // For now, display a simple placeholder and future-proof hook.
         tryLoadImageToLabel(avatarLabel, AVATAR_DIR + "/default.png");
     }
 
@@ -466,7 +468,8 @@ public class GameGUI extends JFrame {
         hpBar.setForeground(accent);
 
         // Inventory title bar
-        updateInventoryTitleBarColors(titleBar, fg);
+        invTitleLabel.setBackground(titleBar);
+        invTitleLabel.setForeground(fg);
 
         // Buttons
         for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak}) {
@@ -474,14 +477,14 @@ public class GameGUI extends JFrame {
             b.setForeground(fg);
         }
 
-        currentBg = bg; currentFg = fg; currentAccent = accent;
+        currentBg = bg; currentFg = fg; currentAccent = accent; currentTitleBar = titleBar;
         repaint();
     }
 
     private void fadeThemeTo(Color bg, Color fg, Color accent, Color titleBar, int durationMs) {
         if (durationMs <= 0) { applyColors(bg, fg, accent, titleBar); return; }
 
-        final Color startBg = currentBg, startFg = currentFg, startAc = currentAccent;
+        final Color startBg = currentBg, startFg = currentFg, startAc = currentAccent, startTitle = currentTitleBar;
         final long start = System.currentTimeMillis();
 
         Timer timer = new Timer(16, null);
@@ -491,32 +494,25 @@ public class GameGUI extends JFrame {
             Color ibg = blend(startBg, bg, t);
             Color ifg = blend(startFg, fg, t);
             Color iac = blend(startAc, accent, t);
-            applyColors(ibg, ifg, iac, titleBar); // titleBar doesn't need to tween separately
+            Color ititle = blend(startTitle, titleBar, t);
+            // Apply tweened colors
+            leftStack.setBackground(ibg);
+            rightSide.setBackground(ibg);
+            storyArea.setBackground(blend(ibg, Color.WHITE, 0.06));
+            storyArea.setForeground(ifg);
+            commandField.setBackground(blend(ibg, Color.WHITE, 0.10));
+            commandField.setForeground(ifg);
+            inventoryList.setBackground(blend(ibg, Color.WHITE, 0.08));
+            inventoryList.setForeground(ifg);
+            hpBar.setBackground(ibg);
+            hpBar.setForeground(iac);
+            invTitleLabel.setBackground(ititle);
+            invTitleLabel.setForeground(ifg);
+
+            currentBg = ibg; currentFg = ifg; currentAccent = iac; currentTitleBar = ititle;
+            repaint();
         });
         timer.start();
-    }
-
-    private void updateInventoryTitleBarColors(Color barBg, Color fg) {
-        // Walk the component tree to find the title bar label and set colors
-        // (We know it's the first BorderLayout.CENTER of rightTopInner's title bar panel)
-        for (Component c : rightTop.getComponents()) {
-            if (c instanceof JPanel) {
-                for (Component c2 : ((JPanel)c).getComponents()) {
-                    if (c2 instanceof JPanel) {
-                        for (Component c3 : ((JPanel)c2).getComponents()) {
-                            if (c3 instanceof JLabel) {
-                                JLabel lbl = (JLabel)c3;
-                                if ("Inventory".equalsIgnoreCase(lbl.getText())) {
-                                    lbl.setBackground(barBg);
-                                    lbl.setForeground(fg);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private void updatePanelBordersAndBackgrounds() {
