@@ -1,9 +1,12 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
 import javax.imageio.ImageIO;
@@ -14,13 +17,28 @@ public class GameGUI extends JFrame {
 
     // ======= Config =======
     private static final int FADE_DURATION_MS = 600;     // crossfade duration for images/colors
-    private static final String IMAGE_DIR = "images";     // where you store room/scene images
-    private static final String AVATAR_DIR = "images/avatars"; // optional avatar images by gear
-    private static final Font FONT_MONO = new Font(Font.MONOSPACED, Font.PLAIN, 14);
-    private static final Font FONT_UI   = new Font("Serif", Font.PLAIN, 16);
+    private static final int TYPE_DELAY_MS    = 22;      // medium pace typing (lower = faster)
+    private static final String IMAGE_DIR     = "images";
+    private static final String AVATAR_DIR    = "images/avatars";
+    private static final String INTRO_IMAGE   = IMAGE_DIR + "/intro.png";
+    private static final String INTRO_TEXT_TXT= IMAGE_DIR + "/intro.txt"; // optional external intro text
+
+    private static final Font STORY_FONT = new Font("Serif", Font.PLAIN, 18);
+    private static final Font UI_FONT    = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
+    private static final Font MONO_FONT  = new Font(Font.MONOSPACED, Font.PLAIN, 14);
 
     // ======= Game & State =======
     private final Game game;
+    private boolean introPlayed = false;
+    private boolean typingActive = false;
+
+    // ======= UI: Containers =======
+    private final JPanel root = new JPanel(new BorderLayout());
+    private final JPanel contentFrame = new JPanel(new BorderLayout()); // framed area with panels inside
+    private final JPanel leftStack = new JPanel();
+    private final JPanel rightSide = new JPanel(new BorderLayout());
+    private final JPanel rightTop  = new JPanel(new BorderLayout());
+    private final JPanel rightBottom = new JPanel(new BorderLayout());
 
     // ======= UI: Left/Center =======
     private final CrossfadeImagePanel sceneImagePanel = new CrossfadeImagePanel();
@@ -38,14 +56,7 @@ public class GameGUI extends JFrame {
     private final JButton btnHint      = new JButton("Hint");
     private final JButton btnSpeak     = new JButton("Speak");
 
-    // Containers for easy theme application
-    private final JPanel root = new JPanel(new BorderLayout());
-    private final JPanel leftStack = new JPanel();
-    private final JPanel rightSide = new JPanel(new BorderLayout());
-    private final JPanel rightTop  = new JPanel(new BorderLayout());
-    private final JPanel rightBottom = new JPanel(new BorderLayout());
-
-    // For color theme fading
+    // For color theme fading (applies to *inner* panels; outer stays dark)
     private Color currentBg = new Color(245, 240, 225);
     private Color currentFg = new Color(40, 30, 20);
     private Color currentAccent = new Color(120, 85, 60);
@@ -58,112 +69,147 @@ public class GameGUI extends JFrame {
         buildLayout();
         wireActions();
 
-        // Show initial state
-        appendStory(game.look());
-        updateHP();
-        refreshInventory();
-        applyThemeForCurrentRoom(true);
-        updateSceneImageForCurrentRoom(true);
-
+        // Start with intro; gameplay loads after intro completes
+        playIntroSequence();
         setVisible(true);
     }
 
     private void initWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 750);
+        setSize(1120, 760);
         setLocationRelativeTo(null);
         setContentPane(root);
+
+        // Outer background stays dark/black to frame the UI nicely
+        root.setBackground(new Color(12, 12, 12));
+        root.setBorder(new EmptyBorder(10, 10, 10, 10));
+    }
+
+    private JPanel framed(JComponent inner) {
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.add(inner, BorderLayout.CENTER);
+        wrap.setBorder(new LineBorder(Color.BLACK, 3, false));
+        return wrap;
     }
 
     private void buildLayout() {
-        // Root spacing
-        root.setBorder(new EmptyBorder(10, 10, 10, 10));
+        // Content frame holds the left/right panels with spacing
+        contentFrame.setOpaque(false);
+        contentFrame.setBorder(new EmptyBorder(0, 0, 0, 0));
+        root.add(contentFrame, BorderLayout.CENTER);
 
         // ----- LEFT/CENTER STACK -----
         leftStack.setLayout(new BoxLayout(leftStack, BoxLayout.Y_AXIS));
+        leftStack.setOpaque(true);
 
-        // (1) Scene image on top
-        sceneImagePanel.setPreferredSize(new Dimension(700, 260));
-        sceneImagePanel.setBorder(BorderFactory.createLineBorder(new Color(0,0,0,40)));
+        // (1) Scene image (framed)
+        sceneImagePanel.setPreferredSize(new Dimension(720, 260));
+        JPanel sceneFrame = framed(sceneImagePanel);
 
-        // (2) Story text area
+        // (2) Story text (framed)
         storyArea.setEditable(false);
         storyArea.setWrapStyleWord(true);
         storyArea.setLineWrap(true);
-        storyArea.setFont(FONT_UI);
-        storyArea.setBorder(new EmptyBorder(10, 10, 10, 10));
+        storyArea.setFont(STORY_FONT);
+        storyArea.setBorder(new EmptyBorder(12, 12, 12, 12));
         JScrollPane storyScroll = new JScrollPane(storyArea);
-        storyScroll.setPreferredSize(new Dimension(700, 320));
+        storyScroll.setBorder(null);
+        JPanel storyFrame = framed(storyScroll);
+        storyFrame.setPreferredSize(new Dimension(720, 320));
 
-        // (3) Command input field
-        commandField.setFont(FONT_MONO);
-        commandField.setBorder(new EmptyBorder(8, 10, 8, 10));
-        commandField.setToolTipText("Type commands like: north | take key | use potion | equip sword | solve riddle");
+        // (3) Command input (framed)
+        commandField.setFont(MONO_FONT);
+        commandField.setBorder(new EmptyBorder(10, 12, 10, 12));
+        commandField.setToolTipText("Type commands: north | take key | use potion | equip sword | solve riddle");
+        JPanel commandFrame = framed(commandField);
+        commandFrame.setPreferredSize(new Dimension(720, 46));
 
-        // Add to left stack
-        leftStack.add(sceneImagePanel);
+        leftStack.add(sceneFrame);
         leftStack.add(Box.createVerticalStrut(10));
-        leftStack.add(storyScroll);
+        leftStack.add(storyFrame);
         leftStack.add(Box.createVerticalStrut(10));
-        leftStack.add(commandField);
+        leftStack.add(commandFrame);
 
         // ----- RIGHT SIDE -----
-        // (4) Top: HP + Inventory
+        // (4) Top: HP + Inventory (framed)
         JPanel hpPanel = new JPanel(new BorderLayout());
+        hpPanel.setOpaque(false);
         JLabel hpLbl = new JLabel("HP", SwingConstants.LEFT);
-        hpLbl.setBorder(new EmptyBorder(0, 0, 5, 0));
+        hpLbl.setBorder(new EmptyBorder(8, 10, 4, 10));
+        hpLbl.setFont(UI_FONT.deriveFont(Font.BOLD));
         hpPanel.add(hpLbl, BorderLayout.NORTH);
         hpBar.setStringPainted(true);
         hpBar.setValue(100);
         hpBar.setPreferredSize(new Dimension(300, 24));
         hpPanel.add(hpBar, BorderLayout.CENTER);
-        hpPanel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        hpPanel.setBorder(new EmptyBorder(6, 10, 8, 10));
 
-        JLabel invLbl = new JLabel("Inventory", SwingConstants.LEFT);
-        invLbl.setBorder(new EmptyBorder(10, 0, 5, 0));
+        // Inventory with attached title bar
+        JLabel invTitle = new JLabel("Inventory", SwingConstants.LEFT);
+        invTitle.setOpaque(true); // so it looks like a title bar
+        invTitle.setBorder(new EmptyBorder(8, 10, 8, 10));
+        invTitle.setFont(UI_FONT.deriveFont(Font.BOLD));
+        JPanel invTitleBar = new JPanel(new BorderLayout());
+        invTitleBar.add(invTitle, BorderLayout.CENTER);
+
         inventoryList.setVisibleRowCount(10);
         JScrollPane invScroll = new JScrollPane(inventoryList);
+        invScroll.setBorder(new EmptyBorder(0,0,0,0));
 
-        JPanel rightTopInner = new JPanel();
-        rightTopInner.setLayout(new BoxLayout(rightTopInner, BoxLayout.Y_AXIS));
-        rightTopInner.add(hpPanel);
-        rightTopInner.add(invLbl);
-        rightTopInner.add(invScroll);
-        rightTopInner.setBorder(new EmptyBorder(0, 10, 10, 10));
-        rightTop.add(rightTopInner, BorderLayout.CENTER);
+        JPanel rightTopInner = new JPanel(new BorderLayout());
+        rightTopInner.add(hpPanel, BorderLayout.NORTH);
+        rightTopInner.add(invTitleBar, BorderLayout.CENTER);
+        rightTopInner.add(invScroll, BorderLayout.SOUTH);
 
-        // (5) Bottom: Buttons + Avatar
+        JPanel rightTopFrame = framed(rightTopInner);
+
+        // (5) Bottom: Buttons + Avatar (framed)
         JPanel buttonRow = new JPanel(new GridLayout(2, 2, 8, 8));
         for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak}) {
             b.setFocusPainted(false);
+            b.setFont(UI_FONT);
             buttonRow.add(b);
         }
+        JPanel buttonWrap = new JPanel(new BorderLayout());
+        buttonWrap.add(buttonRow, BorderLayout.CENTER);
+        buttonWrap.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         avatarLabel.setPreferredSize(new Dimension(120, 120));
-        avatarLabel.setBorder(BorderFactory.createLineBorder(new Color(0,0,0,40)));
         JPanel avatarWrap = new JPanel(new BorderLayout());
         avatarWrap.add(avatarLabel, BorderLayout.CENTER);
-        avatarWrap.setBorder(new EmptyBorder(0, 10, 0, 10));
+        avatarWrap.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel bottomInner = new JPanel(new BorderLayout(10, 10));
-        bottomInner.add(buttonRow, BorderLayout.CENTER);
+        bottomInner.add(buttonWrap, BorderLayout.CENTER);
         bottomInner.add(avatarWrap, BorderLayout.EAST);
-        bottomInner.setBorder(new EmptyBorder(10, 10, 10, 10));
-        rightBottom.add(bottomInner, BorderLayout.CENTER);
+
+        JPanel rightBottomFrame = framed(bottomInner);
 
         // Assemble right side
-        rightSide.add(rightTop, BorderLayout.CENTER);
-        rightSide.add(rightBottom, BorderLayout.SOUTH);
+        JPanel rightStack = new JPanel();
+        rightStack.setLayout(new BoxLayout(rightStack, BoxLayout.Y_AXIS));
+        rightStack.setOpaque(false);
+        rightStack.add(rightTopFrame);
+        rightStack.add(Box.createVerticalStrut(10));
+        rightStack.add(rightBottomFrame);
+
+        rightSide.setOpaque(false);
+        rightSide.add(rightStack, BorderLayout.CENTER);
         rightSide.setPreferredSize(new Dimension(360, 0));
 
-        // Add to root
-        root.add(leftStack, BorderLayout.CENTER);
-        root.add(rightSide, BorderLayout.EAST);
+        // Add to content frame
+        contentFrame.add(leftStack, BorderLayout.CENTER);
+        contentFrame.add(rightSide, BorderLayout.EAST);
+
+        // Initial theme apply to inner panels only
+        applyThemeForCurrentRoom(true);
+        updatePanelBordersAndBackgrounds();
     }
 
     private void wireActions() {
         // Enter submits command
         commandField.addActionListener(e -> {
+            if (typingActive) return; // avoid overlapping while typing
             String cmd = commandField.getText().trim();
             if (!cmd.isEmpty()) {
                 handleCommand(cmd);
@@ -172,19 +218,77 @@ public class GameGUI extends JFrame {
         });
 
         btnInventory.addActionListener(e -> {
+            if (typingActive) return;
             String inv = getInventoryText();
-            appendStory(inv.isEmpty() ? "Your inventory is empty." : "Inventory:\n" + inv);
+            appendStoryTypewriter(inv.isEmpty() ? "Your inventory is empty." : "Inventory:\n" + inv);
         });
 
-        btnHelp.addActionListener(e -> showHelp());
-        btnHint.addActionListener(e -> appendStory("Hint: Explore thoroughly. Try LOOK, and experiment with USE, EQUIP, and SOLVE in puzzle rooms."));
-        btnSpeak.addActionListener(e -> performSpeakAction());
+        btnHelp.addActionListener(e -> { if (!typingActive) showHelp(); });
+        btnHint.addActionListener(e -> { if (!typingActive) appendStoryTypewriter("Hint: Explore thoroughly. Try LOOK, and experiment with USE, EQUIP, and SOLVE in puzzle rooms."); });
+        btnSpeak.addActionListener(e -> { if (!typingActive) performSpeakAction(); });
+    }
+
+    // ======= Intro =======
+    private void playIntroSequence() {
+        introPlayed = true;
+        setControlsEnabled(false);
+        // Set outer darkness + inner neutral
+        storyArea.setText("");
+        updatePanelBordersAndBackgrounds();
+        // Show intro image
+        try {
+            if (new File(INTRO_IMAGE).exists()) {
+                BufferedImage img = ImageIO.read(new File(INTRO_IMAGE));
+                sceneImagePanel.setImage(img, FADE_DURATION_MS);
+            } else {
+                sceneImagePanel.setImage(null, 0);
+            }
+        } catch (Exception ex) {
+            sceneImagePanel.setImage(null, 0);
+        }
+
+        // Title + intro text
+        String title = "THE LOST RELIC OF GALDOR\n\n";
+        String intro = loadIntroText();
+        appendStoryTypewriter(title + intro, () -> {
+            // After intro, initialize gameplay view
+            updateHP();
+            refreshInventory();
+            applyThemeForCurrentRoom(false);
+            updateSceneImageForCurrentRoom(false);
+            appendStoryTypewriter(game.look(), this::finishIntroEnableControls);
+        });
+    }
+
+    private void finishIntroEnableControls() {
+        setControlsEnabled(true);
+        commandField.requestFocusInWindow();
+    }
+
+    private String loadIntroText() {
+        try {
+            if (Files.exists(Paths.get(INTRO_TEXT_TXT))) {
+                return new String(Files.readAllBytes(Paths.get(INTRO_TEXT_TXT)));
+            }
+        } catch (Exception ignored) {}
+        // Fallback: placeholder text. Replace with your original intro by creating images/intro.txt
+        return "A whisper stirs the stillness of the old woods. Lanterns sway where no wind moves, and somewhere, a relic dreams of being found...\n" +
+                "Legends call it the Galdor Relic — a light for the lost and a doom for the unworthy. Few who sought it ever returned.\n" +
+                "Tonight, fate turns its gaze to you.";
+    }
+
+    private void setControlsEnabled(boolean enabled) {
+        commandField.setEnabled(enabled);
+        btnInventory.setEnabled(enabled);
+        btnHelp.setEnabled(enabled);
+        btnHint.setEnabled(enabled);
+        btnSpeak.setEnabled(enabled);
     }
 
     // ======= Command handling =======
     private void handleCommand(String input) {
         String cmd = input.toLowerCase(Locale.ROOT).trim();
-        String out = null;
+        String out;
 
         // Movement
         if (cmd.matches("^(north|south|east|west)$")) {
@@ -202,7 +306,7 @@ public class GameGUI extends JFrame {
             out = game.useItem(item);
         } else if (cmd.startsWith("equip ")) {
             String item = cmd.replaceFirst("^equip\\s+", "");
-            out = game.useItem(item); // equipping is handled by useItem if it's a Weapon/Armor
+            out = game.useItem(item);
         } else if (cmd.startsWith("unequip ")) {
             String item = cmd.replaceFirst("^unequip\\s+", "");
             out = game.unequipItem(item);
@@ -222,7 +326,7 @@ public class GameGUI extends JFrame {
             out = "I don't understand that. Try: look, north/south/east/west, take <item>, use <item>, equip <item>, solve <answer>.";
         }
 
-        appendStory(out);
+        appendStoryTypewriter(out);
         updateHP();
         refreshInventory();
         applyThemeForCurrentRoom(false);
@@ -234,30 +338,51 @@ public class GameGUI extends JFrame {
     private String performSpeakAction() {
         Room cur = game.getPlayer().getCurrentRoom();
         String roomType = cur.getClass().getSimpleName();
-        // Very lightweight logic: only a few rooms have someone to talk to
+        String msg;
         if (roomType.equalsIgnoreCase("OldLadyRoom")) {
-            String msg = "You greet the old lady. She eyes you kindly and mutters about 'paths hidden in plain sight.'";
-            appendStory(msg);
-            return msg;
+            msg = "You greet the old lady. She eyes you kindly and mutters about 'paths hidden in plain sight.'";
         } else if (roomType.equalsIgnoreCase("GoblinRoom")) {
-            String msg = "You try speaking to the goblin. It snarls back — not very conversational.";
-            appendStory(msg);
-            return msg;
+            msg = "You try speaking to the goblin. It snarls back — not very conversational.";
         } else if (roomType.equalsIgnoreCase("DragonRoom")) {
-            String msg = "You address the dragon. It rumbles, smoke curling from its nostrils... Best choose your next action wisely.";
-            appendStory(msg);
-            return msg;
+            msg = "You address the dragon. It rumbles, smoke curling from its nostrils... Best choose your next action wisely.";
+        } else {
+            msg = "Not very effective.";
         }
-        String msg = "Not very effective.";
-        appendStory(msg);
+        appendStoryTypewriter(msg);
         return msg;
     }
 
-    // ======= Story / Output =======
+    // ======= Story / Output (typewriter) =======
     private void appendStory(String text) {
         if (text == null || text.isEmpty()) return;
         storyArea.append(text + "\n\n");
         storyArea.setCaretPosition(storyArea.getDocument().getLength());
+    }
+
+    private void appendStoryTypewriter(String text) { appendStoryTypewriter(text, null); }
+
+    private void appendStoryTypewriter(String text, Runnable onDone) {
+        if (text == null || text.isEmpty()) { if (onDone != null) onDone.run(); return; }
+        typingActive = true;
+        // Ensure spacing between chunks
+        if (storyArea.getDocument().getLength() > 0 && !storyArea.getText().endsWith("\n\n")) {
+            storyArea.append("\n");
+        }
+        final char[] chars = (text + "\n\n").toCharArray();
+        final int[] idx = {0};
+
+        Timer t = new Timer(TYPE_DELAY_MS, null);
+        t.addActionListener(e -> {
+            storyArea.append(String.valueOf(chars[idx[0]]));
+            idx[0]++;
+            storyArea.setCaretPosition(storyArea.getDocument().getLength());
+            if (idx[0] >= chars.length) {
+                ((Timer)e.getSource()).stop();
+                typingActive = false;
+                if (onDone != null) onDone.run();
+            }
+        });
+        t.start();
     }
 
     // ======= HP / Inventory =======
@@ -282,31 +407,29 @@ public class GameGUI extends JFrame {
     }
 
     private void updateAvatarForGear() {
-        // Optional: change avatar image based on equipped items
-        // For now, display a simple placeholder and future-proof hook.
+        // Placeholder hook for future gear-based avatars
         tryLoadImageToLabel(avatarLabel, AVATAR_DIR + "/default.png");
     }
 
     // ======= Themes =======
     private static class Theme {
-        final Color bg, fg, accent;
-        Theme(Color bg, Color fg, Color accent) {
-            this.bg = bg; this.fg = fg; this.accent = accent;
+        final Color bg, fg, accent, titleBar;
+        Theme(Color bg, Color fg, Color accent, Color titleBar) {
+            this.bg = bg; this.fg = fg; this.accent = accent; this.titleBar = titleBar;
         }
     }
 
     private Theme themeForRoom(Room r) {
         String name = r.getClass().getSimpleName();
 
-        // Base palettes
-        Theme regular = new Theme(new Color(245,240,225), new Color(40,30,20), new Color(120,85,60));  // parchment
-        Theme oldLady = new Theme(new Color(60,70,60), new Color(220,230,220), new Color(100,130,100)); // grey + moss
-        Theme dragon  = new Theme(new Color(20,15,20), new Color(240,220,220), new Color(180,20,20));   // black + red
-        Theme puzzle  = new Theme(new Color(230,235,245), new Color(40,40,60), new Color(180,160,210)); // pastel-ish
-        Theme golem   = new Theme(new Color(240,235,170), new Color(50,50,30), new Color(180,180,180)); // yellow + light gray
-        Theme goblin  = new Theme(new Color(90,85,70),  new Color(230,220,210), new Color(80,110,80));  // darker fantasy
-        // Blend regular + oldLady for camp
-        Theme goblinCamp = new Theme(blend(regular.bg, oldLady.bg, 0.5), blend(regular.fg, oldLady.fg, 0.5), blend(regular.accent, oldLady.accent, 0.5));
+        Theme regular = new Theme(new Color(245,240,225), new Color(40,30,20), new Color(120,85,60), new Color(210,200,180));
+        Theme oldLady = new Theme(new Color(60,70,60),   new Color(220,230,220), new Color(100,130,100), new Color(70,85,70));
+        Theme dragon  = new Theme(new Color(20,15,20),   new Color(240,220,220), new Color(180,20,20),   new Color(40,20,20));
+        Theme puzzle  = new Theme(new Color(230,235,245),new Color(40,40,60),    new Color(180,160,210), new Color(210,215,230));
+        Theme golem   = new Theme(new Color(240,235,170),new Color(50,50,30),    new Color(180,180,180), new Color(230,225,170));
+        Theme goblin  = new Theme(new Color(90,85,70),   new Color(230,220,210), new Color(80,110,80),   new Color(100,95,80));
+        Theme goblinCamp = new Theme(blend(regular.bg, oldLady.bg, 0.5), blend(regular.fg, oldLady.fg, 0.5),
+                blend(regular.accent, oldLady.accent, 0.5), blend(regular.titleBar, oldLady.titleBar, 0.5));
 
         if ("DragonRoom".equalsIgnoreCase(name)) return dragon;
         if ("OldLadyRoom".equalsIgnoreCase(name)) return oldLady;
@@ -314,13 +437,7 @@ public class GameGUI extends JFrame {
         if ("GoblinRoom".equalsIgnoreCase(name)) return goblin;
         if (name.toLowerCase().contains("golem")) return golem;
         if (name.toLowerCase().contains("camp") && name.toLowerCase().contains("goblin")) return goblinCamp;
-        // Fallback regular
         return regular;
-    }
-
-    private void applyThemeForCurrentRoom(boolean instant) {
-        Theme t = themeForRoom(game.getPlayer().getCurrentRoom());
-        fadeThemeTo(t.bg, t.fg, t.accent, instant ? 0 : FADE_DURATION_MS);
     }
 
     private static Color blend(Color a, Color b, double t) {
@@ -330,25 +447,29 @@ public class GameGUI extends JFrame {
         return new Color(r,g,bl);
     }
 
-    private void applyColors(Color bg, Color fg, Color accent) {
-        // Update containers
-        root.setBackground(bg);
+    private void applyThemeForCurrentRoom(boolean instant) {
+        Theme t = themeForRoom(game.getPlayer().getCurrentRoom());
+        fadeThemeTo(t.bg, t.fg, t.accent, t.titleBar, instant ? 0 : FADE_DURATION_MS);
+    }
+
+    private void applyColors(Color bg, Color fg, Color accent, Color titleBar) {
+        // Only inner panels get themed. Outer root stays dark.
         leftStack.setBackground(bg);
         rightSide.setBackground(bg);
-        rightTop.setBackground(bg);
-        rightBottom.setBackground(bg);
-        sceneImagePanel.setBackground(bg);
-
         storyArea.setBackground(blend(bg, Color.WHITE, 0.06));
         storyArea.setForeground(fg);
-
         commandField.setBackground(blend(bg, Color.WHITE, 0.10));
         commandField.setForeground(fg);
-
         inventoryList.setBackground(blend(bg, Color.WHITE, 0.08));
         inventoryList.setForeground(fg);
+        hpBar.setBackground(bg);
+        hpBar.setForeground(accent);
 
-        for (JButton b : Arrays.asList(btnInventory, btnHelp, btnHint, btnSpeak)) {
+        // Inventory title bar
+        updateInventoryTitleBarColors(titleBar, fg);
+
+        // Buttons
+        for (JButton b : new JButton[]{btnInventory, btnHelp, btnHint, btnSpeak}) {
             b.setBackground(blend(bg, accent, 0.15));
             b.setForeground(fg);
         }
@@ -357,8 +478,8 @@ public class GameGUI extends JFrame {
         repaint();
     }
 
-    private void fadeThemeTo(Color bg, Color fg, Color accent, int durationMs) {
-        if (durationMs <= 0) { applyColors(bg, fg, accent); return; }
+    private void fadeThemeTo(Color bg, Color fg, Color accent, Color titleBar, int durationMs) {
+        if (durationMs <= 0) { applyColors(bg, fg, accent, titleBar); return; }
 
         final Color startBg = currentBg, startFg = currentFg, startAc = currentAccent;
         final long start = System.currentTimeMillis();
@@ -370,9 +491,40 @@ public class GameGUI extends JFrame {
             Color ibg = blend(startBg, bg, t);
             Color ifg = blend(startFg, fg, t);
             Color iac = blend(startAc, accent, t);
-            applyColors(ibg, ifg, iac);
+            applyColors(ibg, ifg, iac, titleBar); // titleBar doesn't need to tween separately
         });
         timer.start();
+    }
+
+    private void updateInventoryTitleBarColors(Color barBg, Color fg) {
+        // Walk the component tree to find the title bar label and set colors
+        // (We know it's the first BorderLayout.CENTER of rightTopInner's title bar panel)
+        for (Component c : rightTop.getComponents()) {
+            if (c instanceof JPanel) {
+                for (Component c2 : ((JPanel)c).getComponents()) {
+                    if (c2 instanceof JPanel) {
+                        for (Component c3 : ((JPanel)c2).getComponents()) {
+                            if (c3 instanceof JLabel) {
+                                JLabel lbl = (JLabel)c3;
+                                if ("Inventory".equalsIgnoreCase(lbl.getText())) {
+                                    lbl.setBackground(barBg);
+                                    lbl.setForeground(fg);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void updatePanelBordersAndBackgrounds() {
+        // Keep outer root dark
+        root.setBackground(new Color(12, 12, 12));
+        contentFrame.setOpaque(false);
+        rightSide.setOpaque(true);
+        leftStack.setOpaque(true);
     }
 
     // ======= Scene image handling =======
@@ -381,14 +533,12 @@ public class GameGUI extends JFrame {
         String name = r.getClass().getSimpleName().toLowerCase(Locale.ROOT);
         String filename = IMAGE_DIR + "/" + name + ".png"; // e.g., images/dragonroom.png
         if (!new File(filename).exists()) {
-            // fallback to generic
             filename = IMAGE_DIR + "/generic.png";
         }
         try {
             BufferedImage img = ImageIO.read(new File(filename));
             sceneImagePanel.setImage(img, instant ? 0 : FADE_DURATION_MS);
         } catch (Exception ex) {
-            // no image — clear panel
             sceneImagePanel.setImage(null, 0);
         }
     }
@@ -423,7 +573,7 @@ public class GameGUI extends JFrame {
                 "  solve <answer>       — answer riddles in puzzle rooms",
                 "  speak                — try talking (if there's someone)"
         );
-        appendStory(help);
+        appendStoryTypewriter(help);
     }
 
     // ======= Crossfade image panel =======
@@ -440,6 +590,9 @@ public class GameGUI extends JFrame {
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
             int w = getWidth(), h = getHeight();
+            g2.setColor(Color.BLACK);
+            g2.fillRect(0,0,w,h);
+
             if (currentImg != null) {
                 g2.drawImage(currentImg, 0, 0, w, h, null);
             }
