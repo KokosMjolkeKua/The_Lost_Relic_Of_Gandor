@@ -181,7 +181,7 @@ public class GameGUI extends JFrame {
         buttonWrap.add(buttonRow, BorderLayout.CENTER);
         buttonWrap.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        avatarLabel.setPreferredSize(new Dimension(120, 120));
+        avatarLabel.setPreferredSize(new Dimension(0, 0));
         JPanel avatarWrap = new JPanel(new BorderLayout());
         avatarWrap.add(avatarLabel, BorderLayout.CENTER);
         avatarWrap.setBorder(new EmptyBorder(10, 10, 10, 10));
