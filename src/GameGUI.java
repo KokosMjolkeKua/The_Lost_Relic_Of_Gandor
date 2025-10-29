@@ -249,7 +249,7 @@ public class GameGUI extends JFrame {
         }
 
         // Title + intro text
-        String title = "THE LOST RELIC OF GALDOR\n\n";
+        String title = "THE LOST RELIC OF GANDOR\n\n";
         String intro = loadIntroText();
         appendStoryTypewriter(title + intro, () -> {
             // After intro, initialize gameplay view
@@ -274,7 +274,7 @@ public class GameGUI extends JFrame {
         } catch (Exception ignored) {}
         // Fallback: placeholder text. Replace with your original intro by creating images/intro.txt
         return "A whisper stirs the stillness of the old woods. Lanterns sway where no wind moves, and somewhere, a relic dreams of being found...\n" +
-                "Legends call it the Galdor Relic — a light for the lost and a doom for the unworthy. Few who sought it ever returned.\n" +
+                "Legends call it the Gandor Relic — a light for the lost and a doom for the unworthy. Few who sought it ever returned.\n" +
                 "Tonight, fate turns its gaze to you.";
     }
 
@@ -345,7 +345,7 @@ public class GameGUI extends JFrame {
         } else if (roomType.equalsIgnoreCase("GoblinRoom")) {
             msg = "You try speaking to the goblin. It snarls back — not very conversational.";
         } else if (roomType.equalsIgnoreCase("DragonRoom")) {
-            msg = "You address the dragon. It rumbles, smoke curling from its nostrils... Best choose your next action wisely.";
+            msg = "You address the dragon. It rumbles, smoke curling from its nostrils... You best choose your next action wisely.";
         } else {
             msg = "Not very effective.";
         }
@@ -558,16 +558,16 @@ public class GameGUI extends JFrame {
     private void showHelp() {
         String help = String.join("\n",
                 "Commands you can type:",
-                "  look                 — describe the room again",
-                "  north/south/east/west or go <dir>",
-                "  take <item>          — pick up an item",
+                "  look (describe the room again)",
+                "  north/south/east/west or go (direction)",
+                "  take <item> (pick up an item)",
                 "  use <item> / drink <item>",
                 "  equip <item> / unequip <item>",
-                "  inventory|inv|i      — list items you carry",
-                "  gear                 — what you're wearing/wielding",
-                "  attack               — fight if there's an enemy",
-                "  solve <answer>       — answer riddles in puzzle rooms",
-                "  speak                — try talking (if there's someone)"
+                "  inventory|inv|i (list items you carry)",
+                "  gear   (what you're wearing/wielding)",
+                "  attack  (fight if there's an enemy)",
+                "  solve <answer>  (answer riddles in puzzle rooms)",
+                "  speak  (try talking (if there's someone)"
         );
         appendStoryTypewriter(help);
     }
